@@ -1,0 +1,12 @@
+.svn
+.idea
+*.iml
+*.iws
+*.ipr
+target
+*.swp
+*.un~
+*.xml~
+
+
+unix-maven-plugin/src/it/*/build.log
