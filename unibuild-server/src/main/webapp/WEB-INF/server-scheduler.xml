@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+ 
+   
+ 
+    <!-- Mail queue -->
+    <bean id="mailQueueJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="mailQueueProcessor" />
+        <property name="targetMethod" value="processMailsWaitingForSend" />
+    </bean>
+    
+    <!-- Build queue monitor -->
+    <bean id="buildQueueJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="buildQueueMonitor" />
+        <property name="targetMethod" value="run" />
+    </bean>
+     
+    <!-- Run the job every 2 minutes with initial delay of 10 seconds -->
+	<bean id="mailQueueTrigger"  class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+	    <property name="jobDetail" ref="mailQueueJobDetail" />
+	    <property name="startDelay" value="10000" />
+	    <property name="repeatInterval" value="${mail.queue.period.ms:120000}" />
+	</bean>
+	 
+	<bean id="buildQueueTrigger"  class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+	    <property name="jobDetail" ref="buildQueueJobDetail" />
+	    <property name="startDelay" value="5000" />
+	    <property name="repeatInterval" value="${build.queue.monitor.period.ms:3000}" />
+	</bean>
+	 
+	 
+ 
+    <!-- Scheduler factory bean to glue together jobDetails and triggers to Configure Quartz Scheduler -->
+    <bean  class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="jobDetails">
+            <list>
+                <ref bean="mailQueueJobDetail" />
+                <ref bean="buildQueueJobDetail" />
+            </list>
+        </property>
+ 
+        <property name="triggers">
+            <list>
+              	<ref bean="mailQueueTrigger" />
+              	<ref bean="buildQueueTrigger" />
+            </list>
+        </property>
+    </bean>
+ 
+</beans>

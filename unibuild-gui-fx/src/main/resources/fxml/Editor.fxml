@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="net.unibld.client.desktop.controller.EditorController"
+	fx:id="editorGrid">
+	<rowConstraints>
+		<RowConstraints minHeight="600" vgrow="ALWAYS" />
+	</rowConstraints>
+	<columnConstraints>
+		<ColumnConstraints hgrow="ALWAYS" minWidth="800.0" />
+	</columnConstraints>
+	<children>
+
+
+
+	</children>
+</GridPane>

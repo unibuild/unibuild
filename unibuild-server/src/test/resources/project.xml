@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<project projectName="remotetest" productName="Remote build test" companyName="unibld.net">
+    <goals>
+		<build>
+			<tasks>
+			
+				<clean dirs="${build.dir}/tmp"/>
+				
+				<cp source="${build.dir}/resources/test.txt" target="${build.dir}" overwrite="true"/>
+							
+			</tasks>
+		</build>
+	</goals>
+    
+</project>

@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition>
+	<h:form id="userTicketDialogForm">
+		<p:dialog header="User access key"
+			widgetVar="userTicketDialog" modal="true" showEffect="fade"
+			hideEffect="fade" resizable="false">
+			
+			<p:outputPanel id="userTicketDetail" style="width:400px;margin-bottom:30px;">
+				<p:panelGrid columns="1"
+					columnClasses="label,value" style="width:100%;">
+					<f:facet name="header">
+						<h:outputText value="Access key" />
+					</f:facet>
+
+					<h:outputText value="No access key generated for user." 
+						rendered="#{userTableBean.selectedUser.accessTicket==null}"/>
+					<h:outputText value="#{userTableBean.selectedUser.accessTicket.id}" 
+						rendered="#{userTableBean.selectedUser.accessTicket!=null}"/>
+						
+					<h:panelGroup style="text-align:right;width:100%;">
+						<p:commandButton action="#{userTableBean.generateUserTicket}" 
+							value="Generate" update="userTicketDetail,userFrm"
+							rendered="#{userTableBean.selectedUser.accessTicket==null}"
+							/>
+						<p:commandButton action="#{userTableBean.regenerateUserTicket}" 
+							value="Regenerate" update="userTicketDetail,userFrm"
+							rendered="#{userTableBean.selectedUser.accessTicket!=null}"
+							/>
+						<p:commandButton action="#{userTableBean.deleteUserTicket}" 
+							value="Delete" update="userTicketDetail,userFrm"
+							rendered="#{userTableBean.selectedUser.accessTicket!=null}"
+							/>
+					</h:panelGroup>
+				</p:panelGrid>
+				
+				
+				
+			</p:outputPanel>
+		</p:dialog>
+	</h:form>
+	
+</ui:composition>
+
+</html>

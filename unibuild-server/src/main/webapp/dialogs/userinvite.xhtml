@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition>
+	<h:form id="userInviteDialogForm">
+		<p:dialog header="Invite new user"
+			widgetVar="userInviteDialog" modal="true" showEffect="fade"
+			hideEffect="fade" resizable="false" width="400">
+			
+			<p:outputPanel id="userInviteDetail" style="text-align:center;margin-bottom:30px;">
+				<p:panelGrid columns="2"
+					columnClasses="label,value">
+					<f:facet name="header">
+						<h:outputText value="Invite new user" />
+					</f:facet>
+
+					<h:outputText value="Email" />
+					<h:inputText id="email" value="#{invitationTableBean.inviteEmail}"
+						required="true" requiredMessage="Email is required."
+						style="width:250px;"/>
+
+					<h:outputText value="Role" />
+					<h:selectOneMenu id="group" value="#{invitationTableBean.inviteGroup}"
+						style="width:250px;">
+						<f:selectItems value="#{invitationTableBean.groupItems}" />
+					</h:selectOneMenu>
+
+
+				</p:panelGrid>
+				
+
+				<p:commandButton action="#{invitationTableBean.inviteUser}" update="mainForm,invitationFrm"
+					value="Invite" />
+			</p:outputPanel>
+		</p:dialog>
+	</h:form>
+
+
+	
+
+</ui:composition>
+
+</html>

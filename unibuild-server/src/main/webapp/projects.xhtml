@@ -1,0 +1,120 @@
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:hs="http://www.hideoutsoftware.com/facelets"
+	template="/WEB-INF/jsf/template.xhtml">
+
+	<ui:define name="content">
+		<h1 class="ui-widget" style="font-size: 1.2em;">Projects</h1>
+		<h:form id="projectFrm">
+			<p:growl id="projectMessages"/>
+			<p:toolbar>  
+			    <p:toolbarGroup align="left" rendered="#{authorizationBean.admin}">  
+			        <!-- <p:commandButton type="button" value="New" icon="ui-icon-document" />-->  
+			  
+			        <p:commandButton value="Open" icon="ui-icon-folder-open"
+			        	update=":projectOpenDialogForm:projectOpenDetail" oncomplete="PF('projectOpenDialog').show()"
+			        	/>  
+			  		
+		  
+			    </p:toolbarGroup>  
+			  
+			  <!--   <p:toolbarGroup align="right">  
+			        <p:menuButton value="Options">  
+			            <p:menuitem value="Home" url="http://www.primefaces.org" />  
+			            <p:menuitem value="ShowCase"  
+			                        url="http://www.primefaces.org/showcase" />  
+			            <p:menuitem value="TouchFaces"  
+			                        url="http://www.primefaces.org/showcase/touch" />  
+			        </p:menuButton>  
+			    </p:toolbarGroup>-->  
+			  
+			  </p:toolbar>  
+		      <h:panelGrid columns="1" >  
+		          <h3 class="ui-widget">Available projects</h3>
+		            
+				  <p:dataTable var="project" value="#{projectTableBean.lazyModel}" paginator="true" rows="10"  
+		                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"  
+		                 rowsPerPageTemplate="10,20,50" selectionMode="single" 
+		                 selection="#{projectTableBean.selectedItem}" 
+		                 id="projects" lazy="true" reflow="true"> 
+		                 
+		                 
+		                
+				        <p:column headerText="Name" sortBy="name" filterBy="#{project.name}">  
+				            <h:outputText value="#{project.name}" />  
+				        </p:column>  
+				  
+				        <p:column headerText="Display name" sortBy="displayName" filterBy="#{project.displayName}">  
+				            <h:outputText value="#{project.displayName}" />  
+				        </p:column>
+				        
+				        <p:column headerText="Path" sortBy="path" filterBy="#{project.path}">  
+				            <h:outputText value="#{project.path}" />  
+				        </p:column>  
+				  
+				        <p:column headerText="Build number" sortBy="buildNumber">  
+				            <h:outputText value="#{project.buildNumber}" />  
+				        </p:column>  
+				  
+				        <p:column headerText="Created" sortBy="createDate">  
+				            <h:outputText value="#{project.createDate}">
+				            	<f:convertDateTime type="both" pattern="yyyy.MM.dd HH:mm"/>
+				            </h:outputText>  
+				        </p:column>  
+				  
+				  		<p:column headerText="Last modified" sortBy="lastModifiedDate">  
+				            <h:outputText value="#{project.lastModifiedDate}">
+				            	<f:convertDateTime type="both" pattern="yyyy.MM.dd HH:mm"/>
+				            </h:outputText>  
+				        </p:column>  
+				  		
+				  		
+					    <p:column headerText="Delete" style="text-align: center" rendered="#{authorizationBean.admin}">
+				             <p:commandButton update=":projectFrm" onclick="if (!confirm('Are you sure you want to delete this project?')) return false;"
+									icon="ui-icon-cancel" title="Delete" action="#{projectTableBean.deleteProject}">
+				        		<f:setPropertyActionListener target="#{projectTableBean.selectedItem}"
+									value="#{project}" />
+							</p:commandButton>
+				        </p:column>	   
+				        
+				        <p:column headerText="Run" style="text-align: center">
+				             <p:commandButton update=":projectRunDialogForm" oncomplete="PF('projectRunDialog').show()" icon="ui-icon-play" title="Run"
+				             		rendered="#{projectTableBean.hasAccessToProject(project)}">
+				        		<f:setPropertyActionListener target="#{projectTableBean.selectedItem}"
+									value="#{project}" />
+							</p:commandButton>
+				        </p:column>	   
+				    </p:dataTable>  
+		      </h:panelGrid>
+	      </h:form>
+	      
+	      <p:dialog header="Project details" widgetVar="projectDialog" resizable="true">  
+	  
+	        <h:panelGrid id="projectDisplay" columns="2" cellpadding="4">  
+	  
+	            <f:facet name="header">  
+	                <h:outputText value="#{projectTableBean.selectedItem.name}" style="font-weight:bold"/> 
+	            </f:facet>  
+	  
+	            <h:outputText value="Display name:" />  
+	            <h:outputText value="#{projectTableBean.selectedItem.displayName}" style="font-weight:bold"/>  
+	  
+	            <h:outputText value="Path:" />  
+	            <h:outputText value="#{projectTableBean.selectedItem.path}" style="font-weight:bold"/>  
+	  
+	            <h:outputText value="Build number:" />  
+	            <h:outputText value="#{projectTableBean.selectedItem.buildNumber}" style="font-weight:bold"/>  
+	  
+	            <h:outputText value="Last modified:" />  
+	            <h:outputText value="#{projectTableBean.selectedItem.lastModifiedDate}" style="font-weight:bold"/>  
+	        </h:panelGrid>  
+	    </p:dialog>    
+
+		<ui:include src="dialogs/projectopen.xhtml" />
+		<ui:include src="dialogs/projectrun.xhtml" />
+		<ui:include src="dialogs/passwordReader.xhtml" />
+	</ui:define>
+</ui:composition>

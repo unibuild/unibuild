@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+</h:head>
+<h:body>
+	<h:outputStylesheet name="css/default.css" />
+	<h:form id="mainForm">
+
+		<p:growl id="messages" />
+		<h1 class="ui-widget" style="font-size: 1.5em;">UniBuild Server
+			Management Console Setup</h1>
+		<!-- <ui:include src="includes/menu.xhtml"/>-->
+		<style>
+			.ui-panelgrid td, .ui-panelgrid tr
+			{
+			    border-style: none !important
+			}
+		</style>
+		
+		<p:wizard flowListener="#{setupBean.onFlowProcess}">
+        <p:tab id="database" title="Database">
+            <p:panel header="Database setup">
+                <p:messages id="dbMessages"/>
+                <h:panelGrid columns="2" columnClasses="label, value">
+                    <h:outputText value="Database type: *" />
+                    <p:selectOneMenu value="#{setupBean.model.database.type}" required="true" label="Type">
+                    	<f:selectItems value="#{setupBean.databaseTypeItems}"/>
+                    	<p:ajax listener="#{setupBean.databaseTypeChanged}" update="database" />
+                    </p:selectOneMenu>
+ 
+                    <h:outputText value="Database JDBC URL: *" />
+                    <h:panelGrid columns="2">
+                    	<p:inputText value="#{setupBean.model.database.url}" required="true" label="URL"
+                    		style="width:600px;"/>
+                    	<p:commandButton icon="ui-icon-folder-open"
+	        				update=":urlComposeDialogForm:urlComposeDetail" 
+	        				oncomplete="PF('urlComposeDialog').show()"
+	        				immediate="true"/> 
+ 							
+                    </h:panelGrid>
+ 
+                    <h:outputText value="User: *" />
+                    <p:inputText value="#{setupBean.model.database.user}" required="true" label="User"/>
+
+                    <h:outputText value="Password: *" />
+                    <p:inputText value="#{setupBean.model.database.password}" required="true" label="Password"/>
+ 
+ 					<h:outputText value="Test connection:" />
+ 					<p:commandButton actionListener="#{setupBean.testDatabaseConnection}" 
+ 						value="Test" ajax="true" update="dbMessages"/>
+                </h:panelGrid>
+            </p:panel>
+        </p:tab>
+ 
+        <p:tab id="address" title="Mail">
+            <p:panel header="Mail setup">
+                <p:messages id="mailMessages"/>
+                <h:panelGrid columns="2" columnClasses="label, value">
+                    <h:outputText value="Host: *" />
+                    <p:inputText value="#{setupBean.model.mail.host}" required="true" label="Host"/>
+ 
+                    <h:outputText value="Port: *" />
+                    <p:inputText value="#{setupBean.model.mail.port}" required="true" label="Port"/>
+ 
+                    <h:outputText value="User:" />
+                    <p:inputText value="#{setupBean.model.mail.user}" required="false" label="User"/>
+                    
+                    
+ 					<h:outputText value="Password:" />
+                    <p:inputText value="#{setupBean.model.mail.password}" required="false" label="Password"/>
+                    
+                    <h:outputText value="Sender email: *" />
+                    <p:inputText value="#{setupBean.model.mail.senderEmail}" required="true" label="Sender email"/>
+ 
+ 					<h:outputText value="Start TLS: " />
+                    <h:selectBooleanCheckbox value="#{setupBean.model.mail.startTls}" />
+                    
+                    <h:outputText value="SSL enabled: " />
+                    <h:selectBooleanCheckbox value="#{setupBean.model.mail.ssl}" />
+ 					
+                  	<h:outputText value="Test mail:" />
+                  	<h:panelGrid columns="3">
+                  		<h:outputText value="To: " />
+                  		<p:inputText value="#{setupBean.testAddress}" label="To"/>
+ 						<p:commandButton actionListener="#{setupBean.testMail}" 
+ 							value="Test" ajax="true" update="mailMessages"/>
+ 					</h:panelGrid>
+ 					
+                    
+                </h:panelGrid>
+            </p:panel>
+        </p:tab>
+ 
+        <p:tab id="contact" title="Administrator">
+            <p:panel header="Administrator user setup">
+                <p:messages />
+                <h:panelGrid columns="2" columnClasses="label, value">
+                    <h:outputText value="Username: *" />
+                    <p:inputText value="#{setupBean.model.admin.name}" required="true" label="Username"/>
+ 
+                    <h:outputText value="Email: *" />
+                    <p:inputText value="#{setupBean.model.admin.email}" required="true" label="Email"/>
+ 
+ 					<h:outputText value="Password: *" />
+                    <p:inputText value="#{setupBean.model.admin.password}" required="true" label="Password"/>
+ 				
+                </h:panelGrid>
+            </p:panel>
+        </p:tab>
+ 
+        <p:tab id="confirm" title="Confirmation">
+            <p:panel header="Confirmation">
+                <h:panelGrid id="confirmation" columns="1" columnClasses="grid">
+                    <p:panelGrid columns="2" columnClasses="label, value">
+                    	<f:facet name="header">
+                    	 	<h:outputText value="Database" />
+                    	</f:facet>
+                        <h:outputText value="Database type:" />
+                        <h:outputText value="#{setupBean.model.database.type}" styleClass="outputLabel"/>
+                    	
+                    	<h:outputText value="Database JDBC URL:" />
+                    	<h:outputText value="#{setupBean.model.database.url}"/>
+ 							
+ 						<h:outputText value="Database user:" />
+                    	<h:outputText value="#{setupBean.model.database.user}" />
+                    </p:panelGrid>
+ 
+                   
+ 
+                    <p:panelGrid columns="2" columnClasses="label, value">
+                    	<f:facet name="header">
+                    	 	<h:outputText value="SMTP" />
+                    	</f:facet>
+                    	
+                       <h:outputText value="SMTP host:" />
+	                   <h:outputText value="#{setupBean.model.mail.host}"/>
+	 
+	                    <h:outputText value="SMTP port:" />
+	                    <h:outputText value="#{setupBean.model.mail.port}"/>
+	 
+	                    <h:outputText value="SMTP user:" />
+	                    <h:outputText value="#{setupBean.model.mail.user}"/>
+	                    
+	                    <h:outputText value="Sender email:" rendered="#{not empty setupBean.model.mail.senderEmail}"/>
+	                    <h:outputText value="#{setupBean.model.mail.senderEmail}" rendered="#{not empty setupBean.model.mail.senderEmail}"/>
+	 
+	 					<h:outputText value="Start TLS: " />
+	                    <h:outputText value="#{setupBean.model.mail.startTls}" />
+	                    
+	                    <h:outputText value="SSL enabled: " />
+	                    <h:outputText value="#{setupBean.model.mail.ssl}" />
+                    </p:panelGrid>
+ 
+                    <p:panelGrid columns="2" columnClasses="label, value">
+                    	<f:facet name="header">
+                    	 	<h:outputText value="Administrator" />
+                    	</f:facet>
+                    	
+                        <h:outputText value="Username:" />
+	                    <h:outputText value="#{setupBean.model.admin.name}"/>
+	 
+	                    <h:outputText value="Email:" />
+	                    <h:outputText value="#{setupBean.model.admin.email}"/>
+	 
+                      
+                    </p:panelGrid>
+                </h:panelGrid>
+ 
+                <p:commandButton value="Submit" action="#{setupBean.save}" update="messages" ajax="false"
+                	style="margin-top:20px;"/>
+            </p:panel>
+        </p:tab>
+    </p:wizard>
+	</h:form>
+	
+	<ui:include src="dialogs/urlcompose.xhtml" />
+	
+</h:body>
+</html>

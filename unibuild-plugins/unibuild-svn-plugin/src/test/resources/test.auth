@@ -1,0 +1,17 @@
+K 8
+passtype
+V 6
+simple
+K 8
+password
+V 7
+test123
+K 15
+svn:realmstring
+V 42
+<http://ewise.hu:80> Subversion Repository
+K 8
+username
+V 9
+test-user
+END

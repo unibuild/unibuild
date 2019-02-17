@@ -1,0 +1,120 @@
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:hs="http://www.hideoutsoftware.com/facelets"
+	template="/WEB-INF/jsf/template.xhtml">
+
+	<ui:define name="content">
+		<h1 class="ui-widget" style="font-size: 1.2em;">Users</h1>
+		<h:form id="userFrm">
+			<p:dataTable var="item" value="#{userTableBean.lazyModel}"
+				paginator="true" rows="20"
+				paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				selectionMode="single" selection="#{userTableBean.selectedUser}"
+				sortMode="single" id="userTable" widgetVar="userTable" lazy="true"
+				reflow="true">
+		
+				<p:column headerText="User ID" sortBy="#{item.profile.userName}"
+					filterBy="#{item.profile.userName}" filterMatchMode="contains">
+					<h:outputText value="#{item.profile.userName}" />
+				</p:column>
+		
+		
+		
+		
+				<p:column headerText="E-mail" sortBy="#{item.profile.email}"
+					filterBy="#{item.profile.email}" filterMatchMode="contains">
+					<h:outputText value="#{item.profile.email}" />
+				</p:column>
+		
+				<p:column headerText="Státusz" filterBy="#{item.profile.status}"
+					filterMatchMode="exact">
+					<f:facet name="filter">
+						<p:selectOneMenu onchange="PF('userTable').filter()"
+							value="#{userTableBean.statusFilter}">
+							<f:selectItem itemLabel="nincs szűrés" itemValue="#{null}"
+								noSelectionOption="true" />
+							<f:selectItems value="#{userTableBean.statusItems}" />
+						</p:selectOneMenu>
+					</f:facet>
+					<h:outputText
+						value="#{msg['net.unibld.server.entities.security.UserStatus@'.concat(item.profile.status)]}" />
+				</p:column>
+		
+				<p:column headerText="Jogosultság" filterBy="#{item.userAuthority}"
+					filterMatchMode="exact">
+					<f:facet name="filter">
+						<p:selectOneMenu onchange="PF('userTable').filter()"
+							value="#{userTableBean.groupFilter}">
+							<f:selectItem itemLabel="nincs szűrés" itemValue="#{null}"
+								noSelectionOption="true" />
+							<f:selectItems value="#{userTableBean.groupItems}" />
+						</p:selectOneMenu>
+					</f:facet>
+					<h:outputText
+						value="#{msg['net.unibld.server.entities.security.Group@'.concat(item.userAuthority)]}" />
+				</p:column>
+		
+				<p:column headerText="Regisztráció"
+					sortBy="#{item.profile.registerDate}">
+					<h:outputText value="#{item.profile.registerDate}">
+						<f:convertDateTime type="both" pattern="yyyy.MM.dd HH:mm" />
+					</h:outputText>
+				</p:column>
+		
+		
+		
+		
+		
+		
+				<p:column headerText="Ban" style="width:4%;text-align: center">
+					<p:commandButton ajax="false" icon="ui-icon-pause"
+						onclick="if (!confirm('Are you sure you want to ban this user?')) return false;"
+						title="Ban" action="#{userTableBean.banUser}"
+						rendered="#{item.profile.status=='REGISTERED'}">
+						<f:setPropertyActionListener target="#{userTableBean.selectedUser}"
+							value="#{item}" />
+					</p:commandButton>
+				</p:column>
+		
+		
+		
+				<p:column headerText="Edit" style="width:4%;text-align: center">
+					<p:commandButton update=":userDialogForm"
+						oncomplete="PF('userDialog').show()" icon="ui-icon-pencil"
+						title="Edit">
+						<f:setPropertyActionListener target="#{userTableBean.selectedUser}"
+							value="#{item}" />
+					</p:commandButton>
+				</p:column>
+		
+				<p:column headerText="Rights" style="width:4%;text-align: center">
+					<p:commandButton update=":userRightsDialogForm"
+						oncomplete="PF('userRightsDialog').show()" icon="ui-icon-locked"
+						title="Rights" rendered="#{not item.admin}">
+						<f:setPropertyActionListener target="#{userTableBean.selectedUser}"
+							value="#{item}" />
+					</p:commandButton>
+				</p:column>
+		
+				<p:column headerText="Key" style="width:4%;text-align: center">
+					<p:commandButton update=":userTicketDialogForm"
+						oncomplete="PF('userTicketDialog').show()" icon="ui-icon-key"
+						title="Access key">
+						<f:setPropertyActionListener target="#{userTableBean.selectedUser}"
+							value="#{item}" />
+					</p:commandButton>
+				</p:column>
+				
+		
+		
+			</p:dataTable>
+		</h:form>
+		
+		<ui:include src="dialogs/useredit.xhtml" />
+		<ui:include src="dialogs/userrights.xhtml" />
+		<ui:include src="dialogs/userticket.xhtml" />
+	</ui:define>
+</ui:composition>

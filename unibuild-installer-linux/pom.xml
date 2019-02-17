@@ -1,0 +1,185 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  	<parent>
+		<relativePath>../unibuild-parent/pom.xml</relativePath>
+		<groupId>net.unibld</groupId>
+		<artifactId>unibuild-parent</artifactId>
+		<version>0.2</version>
+	</parent>
+
+  <artifactId>unibuild</artifactId>
+  <name>UniBuild Linux Installer</name>
+  <packaging>deb</packaging>
+  <dependencies>
+
+  	
+	<dependency>
+  		<groupId>net.unibld</groupId>
+  		<artifactId>unibuild-core</artifactId>
+  		<version>${project.version}</version>
+	</dependency> 
+	<dependency>
+  		<groupId>net.unibld</groupId>
+  		<artifactId>unibuild-svn-plugin</artifactId>
+  		<version>${project.version}</version>
+	</dependency> 
+	
+	<dependency>
+  		<groupId>net.unibld</groupId>
+  		<artifactId>unibuild-tomcat-plugin</artifactId>
+  		<version>${project.version}</version>
+	</dependency> 
+	
+  	<dependency>
+  		<groupId>org.slf4j</groupId>
+  		<artifactId>slf4j-api</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.slf4j</groupId>
+  		<artifactId>slf4j-log4j12</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>commons-io</groupId>
+  		<artifactId>commons-io</artifactId>
+  	</dependency>
+
+  	
+  	<dependency>
+  		<groupId>commons-lang</groupId>
+  		<artifactId>commons-lang</artifactId>
+  	</dependency>
+  	
+  	
+  	<dependency>
+  		<groupId>commons-codec</groupId>
+  		<artifactId>commons-codec</artifactId>
+  	</dependency>
+  	
+  	<dependency>
+		<groupId>dom4j</groupId>
+		<artifactId>dom4j</artifactId>
+	</dependency>
+	
+	<dependency>
+		<groupId>jaxen</groupId>
+		<artifactId>jaxen</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<scope>test</scope>
+	</dependency>
+<!--
+	<dependency>
+        	<groupId>org.functionaljava</groupId>
+	        <artifactId>functionaljava</artifactId>
+	        <version>3.0</version>
+	</dependency>-->
+	            
+  </dependencies>
+  <build>
+  	<plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<configuration>
+				<source>1.8</source>
+				<target>1.8</target>
+				<showDeprecation>true</showDeprecation>
+				<showWarnings>true</showWarnings>
+			</configuration>
+		</plugin>
+		
+		<plugin>
+          <groupId>org.codehaus.mojo.unix</groupId>
+		  <artifactId>unix-maven-plugin</artifactId>
+		  <version>1.0-alpha-7-SNAPSHOT</version>
+		<extensions>true</extensions>        <configuration>
+		  <name>UniBuild</name>
+		  <id>unibld</id>
+          <contact>unibld.net</contact>
+          <contactEmail>info@unibld.net</contactEmail>
+          <deb>
+ 			<depends>openjdk-8-jdk|oracle-java8-installer|oracle-java8-jdk</depends>
+            <section>devel</section>
+          </deb>
+          <assembly>
+           <copy-file>
+			  <path>src/main/resources/unibld</path>
+			  <toDir>/usr/share/unibld/bin</toDir>
+			  <attributes>
+				<mode>0755</mode>
+			  </attributes>
+            </copy-file> 
+			
+			<mkdirs>
+			  <path>/var/unibld/data</path>
+			  <attributes>
+				<mode>0755</mode>
+				<user>unibld</user>
+				<group>unibld</group>
+			  </attributes>
+			</mkdirs>
+
+           <copyArtifact>
+              <artifact>net.unibld:unibuild-core</artifact>
+              <toFile>/usr/share/unibld/lib/unibuild-core-all.jar</toFile>
+              <attributes>
+                <mode>0755</mode>
+              </attributes>
+            </copyArtifact>
+	    
+		   
+			<copyArtifact>
+              <artifact>net.unibld:unibuild-svn-plugin</artifact>
+              <toFile>/etc/unibld/plugins/unibuild-svn-plugin.jar</toFile>
+              <attributes>
+                <mode>0755</mode>
+              </attributes>
+            </copyArtifact>
+	    
+		    <copyArtifact>
+              <artifact>net.unibld:unibuild-tomcat-plugin</artifact>
+              <toFile>/etc/unibld/plugins/unibuild-tomcat-plugin.jar</toFile>
+              <attributes>
+                <mode>0755</mode>
+              </attributes>
+            </copyArtifact>
+			
+
+
+
+			<copy-file>
+			  <path>src/main/resources/conf</path>
+			  <toDir>/usr/share/unibld/lib</toDir>
+			  <attributes>
+				<mode>0633</mode>
+			  </attributes>
+            </copy-file> 
+			
+			
+		
+              
+            <symlink>
+              <path>/usr/bin/unibld</path>
+              <value>/usr/share/unibld/bin/unibld</value>
+            </symlink>    
+			<symlink>
+              <path>/usr/bin/ubld</path>
+              <value>/usr/share/unibld/bin/unibld</value>
+            </symlink>     			
+
+			</assembly>
+        </configuration>
+      </plugin>
+  	</plugins>
+  </build>
+  <dependencyManagement>
+  	<dependencies>
+  		<dependency>
+  			<groupId>net.unibld</groupId>
+  			<artifactId>unibuild-core</artifactId>
+  		</dependency>
+  	</dependencies>
+  </dependencyManagement>
+</project>

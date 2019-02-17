@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd"
+	version="2.1">
+ 
+	<application>
+		<el-resolver>
+    		    org.springframework.web.jsf.el.SpringBeanFacesELResolver
+		</el-resolver>
+		<locale-config>
+            <default-locale>en</default-locale>
+        </locale-config>
+     	<resource-bundle>
+			<base-name>locale.messages</base-name>
+			<var>msg</var>
+		</resource-bundle>
+		
+  	</application>
+  	
+  	<factory>
+	    <exception-handler-factory>
+	        net.unibld.server.web.jsf.UnibuildExceptionHandlerFactory
+	    </exception-handler-factory>
+	</factory>
+   
+	<lifecycle>
+		<phase-listener>net.unibld.server.web.jsf.LoginErrorPhaseListener
+		</phase-listener>
+	</lifecycle>
+ 
+</faces-config>

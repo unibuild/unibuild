@@ -1,0 +1,17 @@
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:hs="http://www.hideoutsoftware.com/facelets"
+	template="/WEB-INF/jsf/template.xhtml">
+
+	<ui:define name="content">
+		<h1 class="ui-widget" style="font-size: 1.2em;">Log file: #{buildLogBean.logFilePath}</h1>
+		<h:form id="logFrm">
+			<p:panel id="log" header="Log file content">
+				<p:inputTextarea rows="30" cols="200" value="#{buildLogBean.log}"/>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

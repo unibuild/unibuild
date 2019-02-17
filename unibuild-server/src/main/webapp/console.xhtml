@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:hs="http://www.hideoutsoftware.com/facelets"
+	template="/WEB-INF/jsf/template.xhtml">
+
+	<ui:define name="content">
+		<h1 class="ui-widget" style="font-size: 1.2em;">Console</h1>
+		<h:form id="consoleFrm">
+			<p:panel id="console" header="Build console">
+				<p:dataTable value="#{consoleBean.logs}" var="log" id="logTable">
+					<p:column headerText="Date" sortBy="date" style="width:100px;">  
+			            <h:outputText value="#{log.date}">
+			            	<f:convertDateTime type="both" pattern="yyyy.MM.dd HH:mm:ss"/>
+			            </h:outputText>  
+			        </p:column>  
+			  
+			        <p:column headerText="Level" filterBy="#{log.level}" style="width:50px;">  
+			            <h:outputText value="#{log.level}" />  
+			        </p:column>
+			        
+			        <p:column headerText="Message" sortBy="message" filterBy="#{log.message}">  
+			            <h:outputText value="#{log.message}" />  
+			        </p:column>  
+				</p:dataTable>
+				<p:poll interval="3" listener="#{consoleBean.refresh}" update="logTable" />
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>

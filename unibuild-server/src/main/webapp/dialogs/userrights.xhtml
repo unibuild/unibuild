@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition>
+	<h:form id="userRightsDialogForm">
+		<p:dialog header="User rights"
+			widgetVar="userRightsDialog" modal="true" showEffect="fade"
+			width="500" 
+			hideEffect="fade" resizable="false">
+			
+			<p:outputPanel id="userRightsDetail" style="margin-bottom:30px;">
+				<p:panelGrid columns="2"
+					columnClasses="label,value" style="width:100%;">
+					<f:facet name="header">
+						<h:outputText value="Projects" />
+					</f:facet>
+
+					<p:dataTable id="userProjectRights" 
+						value="#{userTableBean.projectRights}" var="right">
+						<p:column headerText="Name">
+							<h:outputText value="#{right.project.name}"/>
+						</p:column>
+						
+						<p:column headerText="Access level">
+							<p:selectOneMenu value="#{right.accessLevel}">
+								<f:selectItems value="#{userTableBean.accessLevelItems}" />
+							</p:selectOneMenu>
+						</p:column>
+						
+					</p:dataTable>
+
+				</p:panelGrid>
+				<p:commandButton action="#{userTableBean.saveUserRights}" value="Save" update="mainForm,userFrm"
+					/>
+				
+				
+			</p:outputPanel>
+		</p:dialog>
+	</h:form>
+	
+</ui:composition>
+
+</html>

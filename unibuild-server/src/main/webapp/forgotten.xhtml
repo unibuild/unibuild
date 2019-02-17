@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+</h:head>
+<h:body>
+	<h:form id="forgottenPasswordForm" prependId="false">
+
+
+
+		<p:panel header="UniBuild Server forgotten password" style="width:340px;">
+			<p:messages id="messages" showDetail="true" autoUpdate="true"
+				showSummary="false" />
+
+			<h:panelGrid columns="2" id="forgottenGrid">
+				<h:outputLabel for="email" value="E-mail address *" />
+				<p:inputText id="email" value="#{forgottenPasswordBean.email}"
+									label="E-mail address" required="true"
+									requiredMessage="E-mail address is required."
+									/> 
+			</h:panelGrid>
+			<p:commandButton type="submit" id="forgottenPassword" ajax="false"
+									actionListener="#{forgottenPasswordBean.send}" value="Send"/>
+			<br/>
+			<a href="login.xhtml">Login</a>
+		</p:panel>
+
+
+
+	</h:form>
+</h:body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition>
+	<h:form id="userDialogForm">
+		<p:dialog header="#{userTableBean.editTitle}" widgetVar="userDialog"
+			modal="true" showEffect="fade" hideEffect="fade" resizable="false"
+			width="400">
+			<p:outputPanel id="userDetail" style="margin-bottom:30px;">
+				<p:panelGrid columns="2"
+					rendered="#{userTableBean.selectedUser!=null}"
+					columnClasses="label,value">
+					
+
+					<h:outputText value="Email" />
+					<p:inputText value="#{userTableBean.selectedUser.profile.email}"
+						required="true" requiredMessage="Email is required."
+						style="width:250px;"/>
+
+					<h:outputText value="Status" />
+					<p:selectOneMenu id="status"
+						value="#{userTableBean.selectedUser.profile.status}"
+						style="width:250px;">
+						<f:selectItems value="#{userTableBean.statusItems}" />
+					</p:selectOneMenu>
+
+					<h:outputText value="Role" />
+					<p:selectOneMenu id="group"
+						value="#{userTableBean.selectedUser.group}"
+						style="width:250px;">
+						<f:selectItems value="#{userTableBean.groupItems}" />
+					</p:selectOneMenu>
+					
+
+				</p:panelGrid>
+				
+				<p:commandButton action="#{userTableBean.saveUser}" value="Save" update="mainForm:messages,userFrm:userTable"
+					/>
+			</p:outputPanel>
+		</p:dialog>
+	</h:form>
+</ui:composition>
+
+</html>

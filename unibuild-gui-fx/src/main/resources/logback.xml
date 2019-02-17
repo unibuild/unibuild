@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+
+	<!-- Enable JMX for logback -->
+	<jmxConfigurator />
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%date %-5level %logger{36}: %message%n</pattern>
+		</encoder>
+	</appender>
+	
+
+	
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${HOME:-${USERPROFILE}}/unibuild/client/logs/unibuild-client.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${HOME:-${USERPROFILE}}/unibuild/client/logs/unibuild-client.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+
+			<!-- keep 9999 days' worth of history -->
+			<maxHistory>9999</maxHistory>
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>%date %-5level %logger{36}: %message%n</pattern>
+		</encoder>
+	</appender>
+	
+	
+	
+    <springProfile name="dev,staging">
+    	<root level="INFO">
+			<appender-ref ref="STDOUT" />
+		</root>
+    </springProfile>
+	
+	<springProfile name="production">
+		<root level="INFO">
+			<appender-ref ref="FILE" />
+		</root>
+	</springProfile>
+
+</configuration>

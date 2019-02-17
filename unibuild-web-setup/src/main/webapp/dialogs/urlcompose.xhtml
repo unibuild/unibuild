@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition>
+	<h:form id="urlComposeDialogForm">
+		<p:dialog header="Compose JDBC URL for #{setupBean.model.database.type}"
+			widgetVar="urlComposeDialog" modal="true" showEffect="fade"
+			hideEffect="fade" resizable="false" width="600">
+			<p:outputPanel id="urlComposeDetail" style="text-align:center;">
+				<p:panelGrid columns="2" 
+					columnClasses="label,value" style="margin-bottom:20px;width:100%;text-align:left;">
+					
+
+					<h:outputText value="Host: *" />
+					<p:inputText id="host"
+						value="#{urlComposerBean.host}" required="true">
+						<p:ajax event="keyup" update="url" listener="#{urlComposerBean.handleKeyEvent}"/>
+					</p:inputText>
+
+					<h:outputText value="Port: *" />
+					<p:inputText id="port"
+						value="#{urlComposerBean.port}" required="true">
+						<p:ajax event="keyup" update="url" listener="#{urlComposerBean.handleKeyEvent}"/>
+					</p:inputText>
+					
+					<h:outputText value="Database: *" />
+					<p:inputText id="database"
+						value="#{urlComposerBean.database}" required="true">
+						<p:ajax event="keyup" update="url" listener="#{urlComposerBean.handleKeyEvent}"/>
+					</p:inputText>
+					
+					<h:outputText value="Instance:" rendered="#{urlComposerBean.instanceVisible}"/>
+					<p:inputText id="instance"
+						value="#{urlComposerBean.instance}" required="false" rendered="#{urlComposerBean.instanceVisible}">
+						<p:ajax event="keyup" update="url" listener="#{urlComposerBean.handleKeyEvent}"/>
+					</p:inputText>
+					
+					
+					
+					<h:outputText value="URL: *" />
+					<p:inputTextarea id="url" style="width:90%;"
+						value="#{urlComposerBean.url}" />
+				</p:panelGrid>
+				<p:messages id="composeMessages" autoUpdate="true"
+					closable="true" />
+
+				<p:commandButton action="#{urlComposerBean.copy}" update="composeMessages,mainForm"
+					value="Set JDBC URL" 
+					oncomplete="PF('urlComposeDialog').hide();"/>
+			</p:outputPanel>
+		</p:dialog>
+	</h:form>
+
+</ui:composition>
+
+</html>

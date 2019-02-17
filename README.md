@@ -2,7 +2,7 @@
 
 ## Introduction
 
-UniBuild is a cross-platform, customizable build, deployment and task executor tool. It is task-oriented, which means users can compile and customize their own set of tasks easily, execute them and monitor the progress of execution, both real-time and afterwards.
+UniBuild is an open-source, cross-platform, customizable build, deployment and task executor tool. It is task-oriented, which means users can compile and customize their own set of tasks easily, execute them and monitor the progress of execution, both real-time and afterwards.
 
 ### What does UniBuild do?
 
@@ -26,6 +26,9 @@ Sure there is a great build tool for every platform, but chaining them into one 
 * If your build tool does not support creating setup packages but you want to automate creating them
 * If you are just a techy person, who wants to combine and automate scripts in an easy way
 
+### Technical information
 
-
-
+* UniBuild uses Java. Typically a suitable JDK is bundled in the setup packages but you can use your own JDK (at least JDK 8 is required)
+* UniBuild uses the Spring Framework. If you want to develop plugins for UniBuild, you should create Spring components.
+* UniBuild uses Hibernate/JPA2 as database abstraction layer. On a server machine, UniBuild supports MySQL, MS-SQL, Oracle and PosgreSQL. On a client machine, UniBuild uses an SQLite database by default, but any of the supported database servers can be used.
+* UniBuild supports the following platforms: Windows (server and client), Linux (server and client), OSX (client)

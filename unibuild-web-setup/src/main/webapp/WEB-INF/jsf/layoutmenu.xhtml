@@ -1,0 +1,37 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pv="http://primefaces.org/venture">
+
+    <h:form id="menuform">
+        <pv:menu widgetVar="VentureMenu">
+            <p:menuitem value="Dashboard" url="/admin/index.xhtml" />
+			<p:menuitem value="Parkolók" url="/admin/parkingLots.xhtml" />
+			<p:menuitem value="Parkolóhelyek" url="/admin/parkingPositions.xhtml" 
+				rendered="#{authorizationBean.adminOrBusinessAdmin}"/>
+			<p:menuitem value="Extra szolgáltatások" url="/admin/customServices.xhtml" 
+				rendered="#{authorizationBean.adminOrBusinessAdmin}"/>
+			<p:menuitem value="Parkolóhely regisztrációk" url="/admin/registrations.xhtml" 
+				rendered="#{authorizationBean.adminOrBusinessAdmin}"/>
+			<p:menuitem value="Foglalások" url="/admin/reservations.xhtml" 
+				rendered="#{authorizationBean.adminOrBusinessAdmin}"/>
+			<p:menuitem value="Felhasználók" url="/admin/users.xhtml" 
+				rendered="#{authorizationBean.admin}"/>
+			<p:submenu label="Bank" rendered="#{authorizationBean.adminOrBusinessAdmin}">
+	            <p:menuitem value="Bankkártya regisztrációk"  url="/admin/bankcardregistrations.xhtml"  />
+	            <p:menuitem value="Bankkártyák"  url="/admin/bankcards.xhtml"  />
+	            <p:menuitem value="Tranzakciók"  url="/admin/transactions.xhtml"  />
+	        </p:submenu>
+			<p:menuitem value="Számlázás" url="/admin/billing.xhtml" 
+				rendered="#{authorizationBean.admin}"/>
+
+			<p:menuitem value="XMPP logok" url="/admin/xmppLogs.xhtml"/>
+			<p:menuitem value="Logout" url="/logout"/>
+			
+        </pv:menu>
+    </h:form>
+
+</ui:composition>

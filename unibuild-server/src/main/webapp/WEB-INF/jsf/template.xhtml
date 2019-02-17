@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+</h:head>
+<h:body>
+	<h:outputStylesheet name="css/default.css" />
+	<h:form id="mainForm">
+
+		<p:growl id="messages" />
+		
+		 <h2 class="ui-widget" style="float:right;padding-right:20px;">
+		 	<h:outputText value="Logged in as: #{authorizationBean.authenticatedUserId}"
+		    	rendered="#{authorizationBean.authenticated}"/>
+		    <p:button value="Logout" href="logout"
+		    	style="margin-left:10px;"/>
+		   
+	    </h2>
+		
+		<h1 class="ui-widget" style="font-size: 1.5em;">UniBuild Server
+			Management Console</h1>
+			
+		
+		<!-- <ui:include src="includes/menu.xhtml"/>-->
+		<style>
+			.ui-panelgrid td, .ui-panelgrid tr
+			{
+			    border-style: none !important
+			}
+		</style>
+		
+		<script type="text/javascript">
+		function progressStart() {
+		    //PF('statusDialog').show();
+		    PF('pbAjax').setValue(0);
+			PF('pbAjax').start();
+		}
+		
+		function progressContinue() {
+		    //PF('statusDialog').show();
+		    PF('pbAjax').start();
+		}
+		 
+		function progressStop() {
+		    //PF('statusDialog').hide();
+			PF('pbAjax').setValue(100);
+			PF('pbAjax').cancel();
+		}
+		
+		
+		
+		</script>
+		
+		<p:menubar>
+			<p:menuitem value="Projects" url="projects.xhtml" icon="ui-icon-document"/>
+			<p:menuitem value="Builds" url="builds.xhtml" icon="ui-icon-play"/>
+			<p:menuitem value="Console" url="console.xhtml" icon="ui-icon-print"/>
+			<p:menuitem value="System" url="system.xhtml" icon="ui-icon-info"/>
+			<p:menuitem value="Users" url="users.xhtml" icon="ui-icon-person"
+				rendered="#{authorizationBean.admin}"/>
+			<p:menuitem value="Invitations" url="invitations.xhtml" icon="ui-icon-mail-closed"
+				rendered="#{authorizationBean.admin}"/>
+			
+		</p:menubar>
+		
+		
+		<p:panelGrid columns="3" style="border-style: none !important">
+			<h:outputText value="#{buildProgressBean.currentBuildLabel}" rendered="#{buildProgressBean.runningOrCompleted}"/>
+			<p:progressBar widgetVar="pbAjax" ajax="true" value="#{buildProgressBean.progress}" labelTemplate="{value}%" styleClass="animated" global="false"
+					style="width:200px;height:1.4em;" rendered="#{buildProgressBean.runningOrCompleted}">
+		        <p:ajax event="complete" listener="#{buildProgressBean.onComplete}" update="mainForm,container"/>
+		    </p:progressBar>
+		    <p:commandButton action="#{buildProgressBean.cancelBuild}" 
+				             		update="mainForm,container"
+									icon="ui-icon-close"
+									rendered="#{buildProgressBean.running}"/>
+		    
+		    <h:outputText value="Waiting in queue: " rendered="#{buildProgressBean.queueSize gt 0}"/>
+		    <h:outputText value="#{buildProgressBean.queueSize} [#{buildProgressBean.queueContent}]"
+		    	rendered="#{buildProgressBean.queueSize gt 0}"/>
+		    <p:commandButton action="#{buildProgressBean.cancelQueue}" 
+				             		update="mainForm,container"
+									icon="ui-icon-close"
+									rendered="#{buildProgressBean.queueSize gt 0}"/>
+	    </p:panelGrid>
+	    
+	   
+
+		
+	</h:form>
+		
+	<h:panelGroup id="container">
+		<div style="margin-left:10px;margin-right: 10px;">
+			<ui:insert name="content"/>
+		</div>
+	</h:panelGroup>
+	
+	
+	<script type="text/javascript">
+		$( document ).ready(function() {
+			console.log("Document ready...");
+			var pb=PF('pbAjax');
+			
+			if(pb) {
+				console.log("Checking progress bar...");
+				if (pb.getValue()>0) {
+					console.log("Restarting progress bar from: "+pb.getValue());
+					pb.start();
+				}
+			}
+		});
+	
+	</script>
+	
+</h:body>
+</html>

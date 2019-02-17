@@ -1,0 +1,22 @@
+#! /bin/sh
+# postinst script for unibuild
+#
+# see: dh_installdeb(1)
+set -e
+
+# Directory where the Tomcat 8 binary distribution resides
+CATALINA_HOME=/usr/share/unibld/tomcat
+
+# Directory for per-instance configuration files and webapps
+CATALINA_BASE=/usr/share/unibld/server
+
+# Install UniBuild for the first time
+if [ ! -f ${CATALINA_BASE}/webapps/ROOT.war ]; then
+    echo "Deploying web installer on first start..."
+	install -D ${CATALINA_BASE}/bundle/unibuild-setup.war ${CATALINA_BASE}/webapps/ROOT.war
+	chown -R unibld ${CATALINA_BASE}/webapps
+fi
+
+chown -R unibld ${CATALINA_BASE}/logs
+chown -R unibld /var/log/unibld
+chown -R unibld /etc/unibld

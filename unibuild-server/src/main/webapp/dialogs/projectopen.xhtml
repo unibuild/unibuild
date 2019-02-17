@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition>
+	<h:form id="projectOpenDialogForm">
+		<p:dialog header="Open project"
+			widgetVar="projectOpenDialog" modal="true" showEffect="fade"
+			hideEffect="fade" resizable="false" width="600">
+			<p:outputPanel id="projectOpenDetail" style="text-align:center;margin-bottom:30px;">
+				<p:panelGrid columns="2" 
+					columnClasses="label,value" style="margin-bottom:20px;width:100%;">
+					
+
+					<h:outputText value="Project path" />
+					<h:inputText id="path"
+						value="#{projectOpenBean.path}" style="width:400px;"/>
+
+				</p:panelGrid>
+				
+
+				<p:commandButton action="#{projectOpenBean.openProject}" update="mainForm,projectFrm"
+					value="Open" />
+			</p:outputPanel>
+		</p:dialog>
+	</h:form>
+
+</ui:composition>
+
+</html>

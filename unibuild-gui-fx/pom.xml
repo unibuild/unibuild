@@ -1,0 +1,326 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<relativePath>../unibuild-parent/pom.xml</relativePath>
+		<groupId>net.unibld</groupId>
+		<artifactId>unibuild-parent</artifactId>
+		<version>0.2</version>
+	</parent>
+
+
+	<artifactId>unibuild-gui-fx</artifactId>
+	<packaging>jar</packaging>
+	<name>UniBuild JavaFX GUI</name>
+	<description>UniBuild universal build and scripting tool JavaFX GUI</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
+	<dependencyManagement>
+		<dependencies>
+		    <dependency>
+		        <!-- Import dependency management from Spring Boot -->
+		        <groupId>org.springframework.boot</groupId>
+		        <artifactId>spring-boot-dependencies</artifactId>
+		        <version>1.3.7.RELEASE</version>
+		        <type>pom</type>
+		        <scope>import</scope>
+		    </dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>net.unibld</groupId>
+			<artifactId>unibuild-core</artifactId>
+			<version>${project.version}</version>
+		</dependency> 
+		
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+		
+		
+			
+		<dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+	
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+		</dependency> 
+		
+		<dependency>
+		    <groupId>de.roskenet</groupId>
+		    <artifactId>springboot-javafx-support</artifactId>
+		    <version>1.3.15</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.fxmisc.richtext</groupId>
+		    <artifactId>richtextfx</artifactId>
+		    <version>0.8.2</version>
+		</dependency>
+		
+				
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		 </dependency>
+		 <dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.5</version>
+			<scope>test</scope>
+		 </dependency>
+		
+	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.2</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<doCheck>false</doCheck>
+					<doUpdate>false</doUpdate>
+
+					<format>{0,number}</format>
+					<items>
+						<item>buildNumber0</item>
+						<item>timestamp</item>
+
+					</items>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<Implementation-Build>${buildNumber}</Implementation-Build>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>1.4</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+                	<dependency>
+	                    <groupId>org.springframework.boot</groupId>
+	                    <artifactId>spring-boot-maven-plugin</artifactId>
+	                    <version>1.3.1.RELEASE</version>
+	                </dependency>
+	            </dependencies>
+				<configuration>
+					<transformers>
+						<transformer
+							implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+							<resource>META-INF/spring.handlers</resource>
+						</transformer>
+						
+                        <transformer
+                            implementation="org.springframework.boot.maven.PropertiesMergingResourceTransformer">
+                        	<resource>META-INF/spring.factories</resource>
+                        </transformer>
+						<transformer
+							implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+							<resource>META-INF/spring.schemas</resource>
+						</transformer>
+						<transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                 			<resource>META-INF/spring.tooling</resource>
+                        </transformer>
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                                
+					</transformers>
+
+
+
+					<shadedArtifactAttached>false</shadedArtifactAttached> <!-- Make the shaded artifact not the main one -->
+					<!-- <shadedClassifierName>shaded</shadedClassifierName>--> <!-- set the suffix to the shaded jar -->
+				</configuration>
+			</plugin>
+
+
+
+			<plugin>
+				<groupId>com.akathist.maven.plugins.launch4j</groupId>
+				<artifactId>launch4j-maven-plugin</artifactId>
+				<version>1.7.1</version>
+				<executions>
+
+					<!-- GUI exe -->
+					<execution>
+						<id>l4j-gui</id>
+						<phase>package</phase>
+						<goals>
+							<goal>launch4j</goal>
+						</goals>
+						<configuration>
+							<headerType>gui</headerType>
+							<outfile>target/UniBuildWinClient.exe</outfile>
+							<!--  <jar>target/${project.artifactId}-${version}-shaded.jar</jar>--> <!-- 'shaded' is the value set on shadedClassifierName above -->
+							<jar>target/${project.artifactId}-${version}.jar</jar>
+							<errTitle>Launch error</errTitle>
+							
+							<classPath>
+								<mainClass>net.unibld.client.desktop.UnibuildFxClient</mainClass>
+							</classPath>
+							<icon>setup/ubld.ico</icon>
+							<jre>
+								<path>jre</path>
+								<minVersion>1.8.0</minVersion>
+								<initialHeapSize>256</initialHeapSize>
+								<maxHeapSize>1024</maxHeapSize>
+							</jre>
+							<versionInfo>
+								<fileVersion>${project.version}.${buildNumber}</fileVersion>
+								<txtFileVersion>${project.version}.${buildNumber}</txtFileVersion>
+								<fileDescription>UniBuild Windows client</fileDescription>
+								<copyright>C</copyright>
+								<productVersion>${project.version}.${buildNumber}</productVersion>
+								<txtProductVersion>${project.version}.${buildNumber}</txtProductVersion>
+								<productName>UniBuild Windows client</productName>
+								<internalName>UniBuildWinClient</internalName>
+								<originalFilename>UniBuildWinClient.exe</originalFilename>
+							</versionInfo>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>sh.tak.appbundler</groupId>
+				<artifactId>appbundle-maven-plugin</artifactId>
+				<version>1.2.0</version>
+				<configuration>
+					<mainClass>net.unibld.client.desktop.UnibuildFxClient</mainClass>
+					<!-- <jrePath>/foo/bar/jre1.8.0_112.jre</jrePath> -->
+					<jrePath>${project.build.directory}/../../kinepict-desktop/setup/jre/mac-x64</jrePath>
+					<iconFile>app_icon.ico.icns</iconFile>
+					<jvmOptions>
+						<jvmOption>-Xms256m</jvmOption>
+						<jvmOption>-Xmx2048m</jvmOption>
+					</jvmOptions>
+					
+					<generateDiskImageFile>true</generateDiskImageFile>
+					<additionalBundledClasspathResources>
+						<additionalBundledClasspathResource>
+							<directory>../kinepict-alg-wrapper/target</directory>
+							<include>kinepict-alg-wrapper.jar</include>
+						
+						</additionalBundledClasspathResource>
+					</additionalBundledClasspathResources>
+					
+				</configuration>
+				<executions>
+					<execution>
+						<!-- mvn goal: package appbundle:bundle -->
+						<phase>package</phase>
+						<goals>
+							<goal>bundle</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>install-javafx</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-install-plugin</artifactId>
+						<version>2.3.1</version>
+						<executions>
+							<execution>
+								<id>install-javafx</id>
+								<goals>
+									<goal>install-file</goal>
+								</goals>
+								<phase>validate</phase>
+								<configuration>
+									<file>${jfx-runtime}/lib/jfxrt.jar</file>
+									<groupId>javafx</groupId>
+									<artifactId>javafx</artifactId>
+									<version>${jfx-version}</version>
+									<packaging>jar</packaging>
+									<javadoc>${jfx-runtime}/../docs/api.zip</javadoc>
+									<!--<sources>no source available</sources> -->
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-resources-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>install-javafx-bin</id>
+								<phase>validate</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${settings.localRepository}/javafx/javafx</outputDirectory>
+									<useBuildFilters>false</useBuildFilters>
+									<resources>
+										<resource>
+											<directory>${jfx-runtime}</directory>
+											<includes>
+												<include>bin/*.dll</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+</project>

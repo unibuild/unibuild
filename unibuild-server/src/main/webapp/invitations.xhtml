@@ -1,0 +1,108 @@
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:hs="http://www.hideoutsoftware.com/facelets"
+	template="/WEB-INF/jsf/template.xhtml">
+
+	<ui:define name="content">
+		<h1 class="ui-widget" style="font-size: 1.2em;">Invitations</h1>
+		<h:form id="invitationFrm">
+			<p:commandButton update=":userInviteDialogForm:userInviteDetail"
+					oncomplete="PF('userInviteDialog').show()"
+					value="Invite new user" title="Invite new user" />
+					
+			<p:commandButton update="invitationTable"
+					value="Refresh" title="Refresh" />
+					
+			<p:dataTable var="item" value="#{invitationTableBean.lazyModel}"
+				paginator="true" rows="20"
+				paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				selectionMode="single"
+				selection="#{invitationTableBean.selectedInvitation}"
+				sortMode="single" id="invitationTable" widgetVar="invitationTable"
+				lazy="true" style="margin-top:10px;" reflow="true">
+		
+				<p:column headerText="ID" sortBy="#{item.id}" filterBy="#{item.id}"
+					filterMatchMode="exact">
+					<h:outputText value="#{item.id}" />
+				</p:column>
+		
+		
+		
+		
+				<p:column headerText="E-mail" sortBy="#{item.profile.email}"
+					filterBy="#{item.email}" filterMatchMode="contains">
+					<h:outputText value="#{item.email}" />
+				</p:column>
+		
+				<p:column headerText="Sender user"
+					sortBy="#{item.invitor.userName}" filterBy="#{item.invitor.userName}"
+					filterMatchMode="contains">
+					<h:outputText value="#{item.invitor.userName}" />
+				</p:column>
+		
+				<p:column headerText="Status" filterBy="#{item.status}"
+					filterMatchMode="exact">
+					<f:facet name="filter">
+						<p:selectOneMenu onchange="PF('userTable').filter()"
+							value="#{invitationTableBean.statusFilter}">
+							<f:selectItem itemLabel="nincs szűrés" itemValue="#{null}"
+								noSelectionOption="true" />
+							<f:selectItems value="#{invitationTableBean.statusItems}" />
+						</p:selectOneMenu>
+					</f:facet>
+					<h:outputText
+						value="#{msg['net.unibld.server.entities.security.invitation.InvitationStatus@'.concat(item.status)]}" />
+				</p:column>
+		
+		
+				<p:column headerText="Modified" sortBy="#{item.modDate}">
+					<h:outputText value="#{item.modDate}">
+						<f:convertDateTime type="both" pattern="yyyy.MM.dd HH:mm" />
+					</h:outputText>
+				</p:column>
+		
+				<p:column headerText="Sent" sortBy="#{item.sendDate}">
+					<h:outputText value="#{item.sendDate}">
+						<f:convertDateTime type="both" pattern="yyyy.MM.dd HH:mm" />
+					</h:outputText>
+				</p:column>
+		
+		
+		
+		
+		
+				<p:column headerText="Cancel" style="text-align: center">
+					<p:commandButton ajax="false" icon="ui-icon-cancel"
+						onclick="if (!confirm('Are you sure you want to cancel this invitation?')) return false;"
+						title="Cancel" action="#{invitationTableBean.cancelInvitation}"
+						rendered="#{item.cancellable}">
+						<f:setPropertyActionListener
+							target="#{invitationTableBean.selectedInvitation}" value="#{item}" />
+					</p:commandButton>
+				</p:column>
+		
+				<p:column headerText="Resend" style="text-align: center">
+					<p:commandButton ajax="false" icon="ui-icon-mail-closed"
+						title="Resend" action="#{invitationTableBean.resendInvitation}"
+						rendered="#{item.resendable}">
+						<f:setPropertyActionListener
+							target="#{invitationTableBean.selectedInvitation}" value="#{item}" />
+					</p:commandButton>
+				</p:column>
+		
+		
+		
+		
+		
+		
+			</p:dataTable>
+			
+		</h:form>
+		
+		<ui:include src="dialogs/userinvite.xhtml" />
+		
+	</ui:define>
+</ui:composition>

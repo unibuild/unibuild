@@ -1,0 +1,126 @@
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:hs="http://www.hideoutsoftware.com/facelets"
+	template="/WEB-INF/jsf/template.xhtml">
+
+	<ui:define name="content">
+		<h1 class="ui-widget" style="font-size: 1.2em;">System</h1>
+		<h:form id="systemFrm">
+			<p:dashboard id="board" model="#{dashboardBean.model}">
+				<p:ajax event="reorder" listener="#{dashboardBean.handleReorder}"
+					update="mainForm:messages" />
+		
+				<p:panel id="server" header="Server">
+					<h:panelGrid columns="2">
+						<h:outputText style="font-weight:bold" value="Server time" />
+						<h:outputText value="#{dashboardBean.serverTime}" />
+		
+						<h:outputText style="font-weight:bold" value="Server started" />
+						<h:outputText value="#{dashboardBean.serverStartTime}" />
+		
+						<h:outputText style="font-weight:bold" value="Server uptime" />
+						<h:outputText value="#{dashboardBean.serverUptime}" />
+		
+						<h:outputText style="font-weight:bold" value="JVM" />
+						<h:outputText
+							value="#{dashboardBean.vmVendor} #{dashboardBean.vmName} #{dashboardBean.vmVersion}" />
+		
+						<h:outputText style="font-weight:bold" value="Heap init (Mb)" />
+						<h:outputText value="#{dashboardBean.heapUsage.init/(1024*1024)}">
+							<f:convertNumber maxFractionDigits="2" />
+						</h:outputText>
+		
+						<h:outputText style="font-weight:bold" value="Heap used (Mb)" />
+						<h:outputText value="#{dashboardBean.heapUsage.used/(1024*1024)}">
+							<f:convertNumber maxFractionDigits="2" />
+						</h:outputText>
+		
+						<h:outputText style="font-weight:bold" value="Heap max (Mb)" />
+						<h:outputText value="#{dashboardBean.heapUsage.max/(1024*1024)}">
+							<f:convertNumber maxFractionDigits="2" />
+						</h:outputText>
+		
+						<h:outputText style="font-weight:bold" value="Heap committed (Mb)" />
+						<h:outputText
+							value="#{dashboardBean.heapUsage.committed/(1024*1024)}">
+							<f:convertNumber maxFractionDigits="2" />
+						</h:outputText>
+		
+		
+						<h:outputText style="font-weight:bold" value="Non-heap init (Mb)" />
+						<h:outputText value="#{dashboardBean.nonHeapUsage.init/(1024*1024)}">
+							<f:convertNumber maxFractionDigits="2" />
+						</h:outputText>
+		
+						<h:outputText style="font-weight:bold" value="Non-heap used (Mb)" />
+						<h:outputText value="#{dashboardBean.nonHeapUsage.used/(1024*1024)}">
+							<f:convertNumber maxFractionDigits="2" />
+						</h:outputText>
+		
+		
+						<h:outputText style="font-weight:bold"
+							value="Non-heap committed (Mb)" />
+						<h:outputText
+							value="#{dashboardBean.nonHeapUsage.committed/(1024*1024)}">
+							<f:convertNumber maxFractionDigits="2" />
+						</h:outputText>
+		
+						<h:outputText style="font-weight:bold" value="Load (avg)" />
+						<h:outputText value="#{dashboardBean.systemLoadAverage}">
+							<f:convertNumber maxFractionDigits="2" />
+						</h:outputText>
+		
+						<h:outputText style="font-weight:bold" value="Thread count" />
+						<h:outputText value="#{dashboardBean.threadCount}" />
+		
+						<h:outputText style="font-weight:bold" value="Operating system" />
+						<h:outputText
+							value="#{dashboardBean.osName} #{dashboardBean.osArch} (v#{dashboardBean.osVersion})" />
+		
+						<h:outputText style="font-weight:bold" value="IP address" />
+						<h:outputText value="#{dashboardBean.ipAddress}" />
+					</h:panelGrid>
+				</p:panel>
+		
+				<p:panel id="config" header="Configuration">
+					<h:panelGrid columns="2">
+						
+		
+						<h:outputText style="font-weight:bold" value="Server version" />
+						<h:outputText value="#{dashboardBean.serverVersion}"/>
+		    
+						
+						<h:outputText style="font-weight:bold" value="Database driver" />
+						<h:outputText
+							value="#{dashboardBean.globalConfig.getPropertyAsString('persistence.jdbc.driver')}" />
+						
+						<h:outputText style="font-weight:bold" value="Database dialect" />
+						<h:outputText
+							value="#{dashboardBean.globalConfig.getPropertyAsString('persistence.hibernate.dialect')}" />
+						
+							
+						<h:outputText style="font-weight:bold" value="Database URL" />
+						<h:outputText
+							value="#{dashboardBean.globalConfig.getPropertyAsString('persistence.jdbc.url')}" />
+							
+						<h:outputText style="font-weight:bold" value="Plugin dir" />
+						<h:outputText
+							value="#{dashboardBean.globalConfig.getPropertyAsString('plugin.dir')}" />
+							
+						<h:outputText style="font-weight:bold" value="Plugins available" />
+						<p:dataList value="#{dashboardBean.pluginNames}" var="plugin" type="ordered" emptyMessage="No plugins found.">
+					        #{plugin}
+					    </p:dataList>
+		 
+					</h:panelGrid>
+				</p:panel>
+		
+		
+			</p:dashboard>
+			
+		</h:form>
+	</ui:define>
+</ui:composition>

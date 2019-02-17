@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition>
+	<h:form id="projectRunDialogForm">
+		<p:dialog header="Run goal: #{projectTableBean.selectedItem.name}"
+			widgetVar="projectRunDialog" modal="true" showEffect="fade"
+			hideEffect="fade" resizable="false" width="600">
+			<p:outputPanel id="projectRunDetail" style="text-align:center;margin-bottom:30px;">
+				<p:panelGrid columns="2" 
+					columnClasses="label,value" style="margin-bottom:20px;width:100%;">
+					
+
+					<h:outputText value="Goal" />
+					<p:selectOneMenu id="goal"
+						value="#{projectRunnerBean.selectedGoal}" style="width:400px;">
+							<p:ajax update="projectRunDetail"/>
+							<f:selectItems value="#{projectRunnerBean.goalItems}"/>
+					</p:selectOneMenu>
+
+
+					
+
+
+				</p:panelGrid>
+				<p:messages id="messages" autoUpdate="true"
+					closable="true" />
+
+				<p:commandButton action="#{projectRunnerBean.runGoal}" update="messages,mainForm,projectFrm"
+					value="Run" 
+					oncomplete="PF('projectRunDialog').hide();progressStart();">
+					<p:confirm header="Run #{projectRunnerBean.selectedGoal}" message="Do you want to run the following goal: #{projectRunnerBean.selectedGoal} (#{projectTableBean.selectedItem.name})?" icon="ui-icon-alert"
+									disabled="#{not projectRunnerBean.selectedGoalConfirmed}" />
+				</p:commandButton>
+			</p:outputPanel>
+			
+			
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+				        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+		</p:dialog>
+		
+		
+	</h:form>
+
+</ui:composition>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+</h:head>
+<h:body>
+	<h:outputStylesheet name="css/default.css" />
+	<h:form id="mainForm">
+
+		<p:growl id="messages" />
+		<h1 class="ui-widget" style="font-size: 1.5em;">UniBuild Server
+			Management Console activation</h1>
+		<!-- <ui:include src="includes/menu.xhtml"/>-->
+		<style>
+			.ui-panelgrid td, .ui-panelgrid tr
+			{
+			    border-style: none !important
+			}
+		</style>
+		
+		<p:panel header="Please specify your account information" rendered="#{activationBean.invitation!=null}">
+			<p:panelGrid columns="2">
+				<h:outputText value="Email"/>
+				<h:outputText value="#{activationBean.invitation.email}"/>
+				
+				<h:outputText value="User name"/>
+				<p:inputText value="#{activationBean.userName}" required="true" 
+					requiredMessage="Username is required."/>
+				
+				<h:outputText value="Password"/>
+				<p:password value="#{activationBean.password}" required="true" 
+					requiredMessage="Password is required."/>
+				
+				<h:outputText value="Password again"/>
+				<p:password value="#{activationBean.passwordConfirm}" required="true" 
+					requiredMessage="Password confirmation is required."/>
+			</p:panelGrid>
+			
+			<p:commandButton value="Save" action="#{activationBean.activate}"
+				update="mainForm"/>
+		</p:panel>
+		
+		<p:panel header="Please specify your invitation code" rendered="#{activationBean.invitation==null}">
+			
+			<p:panelGrid columns="2">
+				<h:outputText value="Invitation code"/>
+				<h:inputText value="#{activationBean.authCode}" style="width:500px;"/>
+			</p:panelGrid>
+			<p:commandButton value="Validate" actionListener="#{activationBean.checkInvitationCode}"
+				update="mainForm"/>
+		</p:panel>
+		
+	</h:form>
+	
+	
+</h:body>
+</html>

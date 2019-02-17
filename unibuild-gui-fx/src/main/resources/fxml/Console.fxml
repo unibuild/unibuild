@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="net.unibld.client.desktop.controller.ConsoleController">
+	<rowConstraints>
+		<RowConstraints minHeight="600" vgrow="ALWAYS" />
+	</rowConstraints>
+	<columnConstraints>
+		<ColumnConstraints hgrow="ALWAYS" minWidth="800.0" />
+	</columnConstraints>
+	<children>
+
+
+
+		<ScrollPane fx:id="consoleScroll" fitToWidth="true"
+			styleClass="no-focus-effect-sp" GridPane.rowIndex="0">
+			<content>
+			</content>
+			<content>
+				<TextArea fx:id="consoleText" editable="false" minHeight="599.0"
+					minWidth="798.0" wrapText="true" />
+			</content>
+		</ScrollPane>
+
+	</children>
+</GridPane>

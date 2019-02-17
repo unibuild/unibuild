@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+</h:head>
+<h:body>
+	<h:form id="loginForm" prependId="false">
+
+
+
+		<p:panel header="UniBuild Server Login" style="width:340px;">
+			<p:messages id="messages" showDetail="true" autoUpdate="true"
+				showSummary="false" />
+
+			<h:panelGrid columns="2" id="loginGrid">
+				<h:outputLabel for="username" value="Username *" />
+				<p:inputText id="username" value="#{loginBean.userName}"
+					label="Username" required="true" />
+
+				<h:outputLabel for="password" value="Password *" />
+				<p:password id="password" value="#{loginBean.password}"
+					label="Password" required="true" />
+			</h:panelGrid>
+			<p:commandButton type="submit" id="login" ajax="false"
+				actionListener="#{loginBean.doLogin}" value="Login" />
+			
+			<br/>
+			<a href="forgotten.xhtml">Forgot your password?</a>
+		</p:panel>
+
+
+
+	</h:form>
+</h:body>
+</html>

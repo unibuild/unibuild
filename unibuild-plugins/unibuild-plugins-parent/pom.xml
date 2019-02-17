@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<relativePath>../../unibuild-parent/pom.xml</relativePath>
+		<groupId>net.unibld</groupId>
+		<artifactId>unibuild-parent</artifactId>
+		<version>0.2</version>
+	</parent>
+
+
+	<artifactId>unibuild-plugins-parent</artifactId>
+	<packaging>pom</packaging>
+	<name>UniBuild Plugins</name>
+	<description>UniBuild universal build and scripting tool plugins</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
+	 <modules>
+		<module>../unibuild-svn-plugin</module>
+		<module>../unibuild-tomcat-plugin</module>
+		<module>../unibuild-android-plugin</module>
+        <module>../unibuild-unity-plugin</module>
+		<module>../unibuild-innosetup-plugin</module>
+		<module>../unibuild-cvs-plugin</module>
+		<module>../unibuild-msbuild-plugin</module>
+		
+    </modules>
+
+
+
+</project>

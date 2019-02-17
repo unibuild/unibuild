@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<script type="text/javascript" src="js/jquery.countdown.min.js"></script>
+	<script type="text/javascript">
+    $( document ).ready(function() {
+        console.log( "document loaded" );
+        var sixtySeconds = new Date().getTime() + 30000;
+        $('#clock').countdown(sixtySeconds)
+        .on('update.countdown', function(event) {
+          var $this = $(this);
+          $this.html(event.strftime('<span>%H:%M:%S</span>'));
+          
+        })
+        .on('finish.countdown', function(event) {
+            window.location.href="index.html";
+            
+        });
+    });
+ 
+   
+    </script>
+</h:head>
+<h:body>
+	
+	<h:outputStylesheet name="css/default.css" />
+	<h:form id="mainForm">
+
+		<p:growl id="messages" />
+		<h1 class="ui-widget" style="font-size: 1.5em;">UniBuild Server
+			Management Console Setup</h1>
+		<!-- <ui:include src="includes/menu.xhtml"/>-->
+		<style>
+			.ui-panelgrid td, .ui-panelgrid tr
+			{
+			    border-style: none !important
+			}
+		</style>
+		
+		<p:panel header="Configuration successful">
+			<p>Unibuld server was configured successfully.</p>
+			<p>Please wait a couple of seconds until we restart the server and redirect you to your Unibuild server installation.</p>
+			
+			<div id="clock"></div>
+		</p:panel>
+		
+	</h:form>
+	
+	
+</h:body>
+</html>

@@ -1,0 +1,161 @@
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:hs="http://www.hideoutsoftware.com/facelets"
+	template="/WEB-INF/jsf/template.xhtml">
+
+	<ui:define name="content">
+		<style>
+			.noborder30 {
+				border-style: none !important;
+				width: 30%;
+			}
+			.noborder70 {
+				border-style: none !important;
+				width: 70%;
+			}
+		</style>
+		<h1 class="ui-widget" style="font-size: 1.2em;">Builds</h1>
+		<h:form id="buildFrm">
+			<h:panelGrid columns="1" >  
+		          <p:dataTable var="build" value="#{buildTableBean.lazyModel}" paginator="true" rows="10"  
+		                 paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"  
+		                 rowsPerPageTemplate="10,20,50" 
+		                 selectionMode="single" selection="#{buildTableBean.selectedItem}" 
+		                 id="builds" lazy="true" widgetVar="buildTable" reflow="true"> 
+		                 
+		                 
+		                
+				        <p:column headerText="Name" sortBy="project.name" filterBy="#{build.project.name}">  
+				            <h:outputText value="#{build.project.name}" />  
+				        </p:column>  
+				  
+				        <p:column headerText="Goal" sortBy="goal" filterBy="#{build.goal}">  
+				            <h:outputText value="#{build.goal}" />  
+				        </p:column>
+				        
+				        <p:column headerText="Task count" sortBy="#{build.taskCount}">  
+				            <h:outputText value="#{build.taskCount}" />  
+				        </p:column>  
+				  
+				        <p:column headerText="Build number" sortBy="#{build.buildNumber}" filterBy="#{build.buildNumber}">  
+				            <h:outputText value="#{build.buildNumber}" />  
+				        </p:column>  
+				  
+				        <p:column headerText="Created" sortBy="#{build.startDate}">  
+				            <h:outputText value="#{build.startDate}">
+				            	<f:convertDateTime type="both" pattern="yyyy.MM.dd HH:mm:ss"/>
+				            </h:outputText>  
+				        </p:column>  
+				  
+				  		<p:column headerText="Completed" sortBy="#{build.completeDate}">  
+				            <h:outputText value="#{build.completeDate}">
+				            	<f:convertDateTime type="both" pattern="yyyy.MM.dd HH:mm:ss"/>
+				            </h:outputText>  
+				        </p:column>  
+				        
+				        <p:column headerText="Success?"
+								sortBy="#{build.successful}"
+								filterBy="#{build.successful}" filterMatchMode="exact">
+								<f:facet name="filter">
+									<p:selectOneMenu onchange="PF('buildTable').filter()"
+										value="#{buildTableBean.successFilter}">
+										<f:selectItem itemLabel="no filter" itemValue="#{null}"
+											noSelectionOption="true" />
+										<f:selectItem itemLabel="successful" itemValue="true"/>
+										<f:selectItem itemLabel="not successful" itemValue="false"/>
+									</p:selectOneMenu>
+								</f:facet>
+								<h:panelGrid columns="2" rendered="#{build.successful}" columnClasses="noborder30,noborder70">
+									<h:graphicImage url="images/accept.png"/>
+									<h:outputText value="OK"/>
+								</h:panelGrid>
+								
+								<h:panelGrid columns="2" rendered="#{not build.successful and build.startDate!=null and build.completeDate==null and build.cancelDate==null and buildProgressBean.isBuildRunning(build)}" columnClasses="noborder30,noborder70">
+									<h:graphicImage url="images/hourglass.png"/>
+									<h:outputText value="Running..."/>
+								</h:panelGrid>
+								<h:panelGrid columns="2" rendered="#{not build.successful and build.startDate!=null and (build.cancelDate!=null or (build.completeDate==null and not buildProgressBean.isBuildRunning(build)))}" columnClasses="noborder30,noborder70">
+									<h:graphicImage url="images/error_delete.png"/>
+									<h:outputText value="Cancelled"/>
+								</h:panelGrid>
+								<h:panelGrid columns="2" rendered="#{not build.successful and build.cancelDate==null and build.completeDate!=null}" columnClasses="noborder30,noborder70">
+									<h:graphicImage url="images/cancel.png"/>
+									<h:outputText value="#{build.failedTaskClass} [#{build.failedTaskIndex}]" rendered="#{build.failedTaskClass!=null and build.failedTaskIndex!=null}"/>
+									<h:outputText value="#{build.failedTaskClass}" rendered="#{build.failedTaskClass!=null and build.failedTaskIndex==null}"/>
+									<h:outputText value="[#{build.failedTaskIndex}]" rendered="#{build.failedTaskClass==null and build.failedTaskIndex!=null}"/>
+								</h:panelGrid>
+						</p:column>
+				  		
+				  		 <p:column headerText="Error" filterBy="#{build.errorMessage}">  
+				            <h:outputText value="#{build.errorMessage}" />  
+				        </p:column>
+				        
+				         <p:column headerText="Log" style="text-align: center">  
+				         	<p:commandButton action="#{buildTableBean.showLog}" value="Show log" icon="ui-icon-print"
+				         			rendered="#{build.logFilePath!=null}">
+							    <f:setPropertyActionListener target="#{buildTableBean.selectedItem}"
+									value="#{build}"/>
+							</p:commandButton>
+				            
+				        </p:column>
+				  		
+				  		
+					    <p:column headerText="Re-run" style="text-align: center">
+				             <p:commandButton action="#{projectRunnerBean.rerunBuild}" 
+				             		update="mainForm,container"
+									value="Restart" 
+									oncomplete="progressStart();"
+									onclick="if (!validate('#{build.goal}','#{build.project.name}',#{buildTableBean.isGoalConfirmed(build)})) { return false; }"
+									rendered="#{build.completeDate!=null}">
+				        		<f:setPropertyActionListener target="#{buildTableBean.selectedItem}"
+									value="#{build}" />
+								<!-- <p:confirm header="Restart #{build.goal}" message="Do you want to restart the following goal: #{build.goal} (#{build.project.name})?" icon="ui-icon-alert"
+									disabled="#{not buildTableBean.isGoalConfirmed(build)}" />-->
+							</p:commandButton>
+				        </p:column>	   
+				    </p:dataTable>  
+		      </h:panelGrid>
+		      
+		      <p:confirmDialog widgetVar="buildConfirmDialog" global="true" showEffect="fade" hideEffect="fade">
+			        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			  </p:confirmDialog>
+			  
+			  <script type="text/javascript">
+			  		function validate(goal,project,confirmed) {
+			  			if (!confirmed) {
+			  				return true;
+			  			}
+			  			
+			  			if (!confirm('Do you want to restart the following goal: '+goal+' ('+project+')?')) {
+			  				return false;
+			  			}
+			  			return true;
+			  		}
+			  </script>
+		  </h:form>
+	            
+	      <p:dialog header="Build details" widgetVar="buildDialog" resizable="true">  
+	  
+	        <h:panelGrid id="buildDisplay" columns="2" cellpadding="4">  
+	  
+	            <f:facet name="header">  
+	                <h:outputText value="#{buildTableBean.selectedItem.project.name}" style="font-weight:bold"/> 
+	            </f:facet>  
+	  
+	  			<h:outputText value="Goal:" />  
+	            <h:outputText value="#{buildTableBean.selectedItem.goal}" style="font-weight:bold"/>  
+	  
+	            <h:outputText value="User:" />  
+	            <h:outputText value="#{buildTableBean.selectedItem.creatorUser}" style="font-weight:bold"/>  
+	  
+	              
+	        </h:panelGrid>  
+	    </p:dialog>    
+
+		<ui:include src="dialogs/passwordReader.xhtml" />
+	</ui:define>
+</ui:composition>
