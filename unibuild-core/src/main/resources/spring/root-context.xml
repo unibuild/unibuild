@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:compass="http://www.compass-project.org/schema/spring-core-config"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+  	<context:annotation-config />
+	<context:component-scan base-package="net.unibld.core" />
+	
+	
+	<bean id="propertyPlaceholderConfigurer"
+			class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		 <property name="locations">
+			<list>
+				<value>#{globalConfigLocator.getPropertiesFileLocation()}</value>
+		 	</list>
+		 </property>
+	</bean>
+ 	
+ 	<bean id="credentialStoreFactory" class="net.unibld.core.security.CredentialStoreFactory"/>
+
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${mail.smtp.host:}" />
+		<property name="port" value="${mail.smtp.port:25}" />
+		<property name="username" value="${mail.smtp.user:}" />
+		<property name="password" value="${mail.smtp.password:}" />
+		<property name="defaultEncoding" value="UTF-8"/>
+			
+		<property name="javaMailProperties">
+		   <props>
+	       	      <prop key="mail.smtp.auth">${mail.smtp.auth:true}</prop>
+	       	      <prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable:true}</prop>
+	       	      <prop key="mail.smtp.ssl.enable">${mail.smtp.ssl.enable:true}</prop>
+	       	      <prop key="mail.debug">${mail.debug:false}</prop>
+	       	   </props>
+		</property>
+	</bean>
+	
+	<import resource="jpa-context.xml" />
+</beans>
+

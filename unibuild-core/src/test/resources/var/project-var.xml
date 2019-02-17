@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<project projectName="uservartest" productName="Test user vars" companyName="Unibuild">
+    <vars>
+		<var name="backupDir" defaultValue="./target/backups"/>   
+    </vars>
+    <version>
+        <buildNumber>100</buildNumber>
+        <majorVersion>0</majorVersion>
+        <minorVersion>0</minorVersion>
+        <releaseVersion>1</releaseVersion>
+    </version>
+	<goals>
+		<build>
+			<tasks>
+				<mkdir path="${backupDir}/bkp_${build.start.time}"/>
+			</tasks>
+		</build>
+	</goals>
+    
+</project>

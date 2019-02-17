@@ -1,0 +1,89 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<relativePath>../unibuild-plugins-parent/pom.xml</relativePath>
+		<groupId>net.unibld</groupId>
+		<artifactId>unibuild-plugins-parent</artifactId>
+		<version>0.2</version>
+	</parent>
+
+	<artifactId>#plugin.name#</artifactId>
+	<packaging>jar</packaging>
+	<name>#plugin.name#</name>
+	<description>#plugin.description#</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	
+	<dependencies>
+		<dependency>
+			<groupId>net.unibld</groupId>
+			<artifactId>unibuild-core</artifactId>
+			<version>${project.version}</version>
+		</dependency> 
+		<dependency>
+			<groupId>net.unibld</groupId>
+			<artifactId>unibuild-test</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency> 
+				
+				
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			
+			
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.2</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<doCheck>false</doCheck>
+					<doUpdate>false</doUpdate>
+
+					<format>r{0,number}_{1,date,yyyyMMdd}</format>
+					<items>
+						<item>buildNumber0</item>
+						<item>timestamp</item>
+
+					</items>
+				</configuration>
+			</plugin>
+			
+		</plugins>
+	</build>
+</project>

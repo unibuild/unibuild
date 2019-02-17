@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<project projectName="TestProject" productName="TestProject on Windows" companyName="UniBuild">
+    <templates>
+    	<template name="clean">
+    		<tasks>
+	            <clean dirs="${clean.dir}"/>
+		    </tasks>
+    	</template>
+    </templates>
+    
+    <goals>
+	    <build>
+	        <tasks>
+	        	<include template="clean">
+	        		<var name="clean.dir" value="./target/template1"/>
+	        	</include> 
+	        	
+	            <clean dirs="./target/template2"/>
+		    </tasks>
+	    </build>
+		
+    </goals>
+</project>

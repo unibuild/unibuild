@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<project projectName="TestProject" productName="TestProject on Windows" companyName="UniBuild">
+    
+    <goals>
+	    <build>
+	        <tasks>
+	            <clean dirs="bootstrap-tmp"/>
+		    </tasks>
+	    </build>
+		<dump>
+		    <tasks>
+	             <clean dirs="bootstrap-dump"/>
+		    </tasks>
+		</dump>
+		
+    </goals>
+</project>

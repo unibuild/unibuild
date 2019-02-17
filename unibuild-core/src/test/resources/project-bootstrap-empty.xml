@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<project projectName="TestProject" productName="TestProject on Windows" companyName="UniBuild">
+   
+	<goals>
+    <build>
+        <buildContext>
+            <attribute name="instance">live</attribute>
+            
+        </buildContext>
+        <tasks>
+           
+	    </tasks>
+        <!-- <logging replaceGlobal="false">
+            <logger>
+                <loggerClass>net.unibld.core.log.SimpleConsoleLogger</loggerClass>
+                <parameter name="format">${task} ${level} ${msg}</parameter>
+            </logger>
+        </logging> -->
+    </build>
+	</goals>
+</project>
