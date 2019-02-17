@@ -11,6 +11,8 @@ UniBuild is an open-source, cross-platform, customizable build, deployment and t
 * It provides a way to execute complex build and deployment tasks by one click
 * It provides a templating mechanism so that you don't need to duplicate task configurations
 * It provides security for your set of goals (projects)
+* It provides detailed logging with error details and execution history
+* It provides integration with source control servers (such as SVN or Git)
 
 ### What does UniBuild NOT do?
 
