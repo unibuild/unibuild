@@ -1,11 +1,24 @@
 #!/bin/sh
 # ----------------------------------------------------------------------------
-cd /opt/unibuild/unibuild-parent
-mvn -U clean install
+set -e
 
-cd /opt/unibuild/unibuild-plugins/unibuild-plugins-parent
-mvn -U clean install
+mkdir -p ./dist
 
-cd /opt/unibuild/unibuild-installer-linux
+cd ./mojo-unix
+mvn -U clean install -DskipTests=true
+cd ..
+
+cd ./unibuild-parent
 mvn -U clean install
+cd ..
+
+cd ./unibuild-plugins/unibuild-plugins-parent
+mvn -U clean install
+cd ../..
+
+cd ./unibuild-installer-linux
+mvn -U clean install
+cp ./target/unibuild*.deb ../dist
+cd ..
+
 
