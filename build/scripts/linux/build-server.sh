@@ -1,25 +1,25 @@
 #!/bin/sh
 # ----------------------------------------------------------------------------
 set -e
-cd /opt/unibuild/mojo-unix
+cd ./mojo-unix
 mvn -U clean install -DskipTests=true
 
-cd /opt/unibuild/unibuild-parent
+cd ./unibuild-parent
 mvn -U clean install
 
-cd /opt/unibuild/unibuild-plugins/unibuild-plugins-parent
+cd ./unibuild-plugins/unibuild-plugins-parent
 mvn -U clean install
 
-cd /opt/unibuild/unibuild-server-common
+cd ./unibuild-server-common
 mvn -U clean install
 
-cd /opt/unibuild/unibuild-server
+cd ./unibuild-server
 mvn -U clean install
 
-cd /opt/unibuild/unibuild-web-setup
+cd ./unibuild-web-setup
 mvn -U clean install
 
-cd /opt/unibuild/unibuild-server-installer-linux
+cd ./unibuild-server-installer-linux
 mvn -U clean install
 
 

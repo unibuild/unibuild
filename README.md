@@ -54,7 +54,7 @@ Sure there is a great build tool for every platform, but chaining them into one 
 	sudo apt-get install maven
 	```
 	
-3. Create build folder
+3. Create a build folder, for example:
 	```
 	mkdir /opt/unibuild
 	```
@@ -64,13 +64,18 @@ Sure there is a great build tool for every platform, but chaining them into one 
 	sudo apt-get install git
 	```
 	
-5. Clone from GitHub
+5. Clone from GitHub into your build folder, for example:
 	```
 	cd /opt/unibuild
 	git clone https://github.com/unibuild/unibuild /opt/unibuild
 	```
+
+6. Install fakeroot
+	```
+	sudo apt-get install fakeroot
+	```
 	
-6. Execute build script
+7. Execute build script from your build folder, for example:
 	```
 	chmod 700 /opt/unibuild/build/scripts/linux/build-server.sh
 	/opt/unibuild/build/scripts/linux/build-server.sh
