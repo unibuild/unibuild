@@ -18,7 +18,7 @@ import net.unibld.server.entities.log.LogLevel;
 
 @Entity
 @Table(name = "build_log",
-	indexes = {@Index(name = "IDX_buildlog_build",  columnList="buildId", unique = false)})
+	indexes = {@Index(name = "IDX_buildlog_build",  columnList="build_id", unique = false)})
 public class BuildLog implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE)
