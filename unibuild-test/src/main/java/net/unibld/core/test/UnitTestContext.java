@@ -81,6 +81,9 @@ public class UnitTestContext {
 	public static String extractResource(Class<?> testClass,
 			String resourcePath) throws URISyntaxException, IOException {
 		URL url = testClass.getResource(resourcePath);
+		if (url==null) {
+			throw new IllegalStateException("Resource not found: "+resourcePath);
+		}
 		File resourceFile = new File(url.toURI());
 		String testDir=FilenameUtils.concat(UnitTestContext.getBaseDir(),testClass.getSimpleName());
 		String extractDir=FilenameUtils.concat(testDir,DF.format(new Date()));
