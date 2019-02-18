@@ -75,8 +75,25 @@ Sure there is a great build tool for every platform, but chaining them into one 
 	sudo apt-get install fakeroot
 	```
 	
-7. Execute build script from your build folder, for example:
+7. To build a server, execute the build-server.sh script from your build folder, for example:
 	```
 	chmod 700 /opt/unibuild/build/scripts/linux/build-server.sh
 	/opt/unibuild/build/scripts/linux/build-server.sh
+	```
+	
+	You will find the resulting .deb package in the dist folder created under your build folder, for example:
+	```
+	/opt/unibuild/dist/unibuild-${version}.deb
+	```
+	
+	
+8. To build a CLI-only version, execute the build.sh script from your build folder, for example:
+	```
+	chmod 700 /opt/unibuild/build/scripts/linux/build.sh
+	/opt/unibuild/build/scripts/linux/build.sh
+	```
+	
+	You will find the resulting .deb package in the dist folder created under your build folder, for example:
+	```
+	/opt/unibuild/dist/unibuild-${version}.deb
 	```
