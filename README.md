@@ -66,7 +66,6 @@ Sure there is a great build tool for every platform, but chaining them into one 
 	
 5. Clone from GitHub into your build folder, for example:
 	```
-	cd /opt/unibuild
 	git clone https://github.com/unibuild/unibuild /opt/unibuild
 	```
 
@@ -78,6 +77,7 @@ Sure there is a great build tool for every platform, but chaining them into one 
 7. To build a server, execute the build-server.sh script from your build folder, for example:
 	```
 	chmod 700 /opt/unibuild/build/scripts/linux/build-server.sh
+	cd /opt/unibuild
 	/opt/unibuild/build/scripts/linux/build-server.sh
 	```
 	
@@ -90,6 +90,7 @@ Sure there is a great build tool for every platform, but chaining them into one 
 8. To build a CLI-only version, execute the build.sh script from your build folder, for example:
 	```
 	chmod 700 /opt/unibuild/build/scripts/linux/build.sh
+	cd /opt/unibuild
 	/opt/unibuild/build/scripts/linux/build.sh
 	```
 	
