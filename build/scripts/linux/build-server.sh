@@ -1,5 +1,8 @@
 #!/bin/sh
 # ----------------------------------------------------------------------------
+cd /opt/unibuild/mojo-unix
+mvn -U clean install -DskipTests=true
+
 cd /opt/unibuild/unibuild-parent
 mvn -U clean install
 

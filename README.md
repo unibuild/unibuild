@@ -69,3 +69,9 @@ Sure there is a great build tool for every platform, but chaining them into one 
 	cd /opt/unibuild
 	git clone https://github.com/unibuild/unibuild /opt/unibuild
 	```
+	
+6. Execute build script
+	```
+	chmod 700 /opt/unibuild/build/scripts/linux/build-server.sh
+	/opt/unibuild/build/scripts/linux/build-server.sh
+	```
