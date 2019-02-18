@@ -80,6 +80,12 @@ public class UnitTestContext {
 	
 	public static String extractResource(Class<?> testClass,
 			String resourcePath) throws URISyntaxException, IOException {
+		if (testClass==null) {
+			throw new IllegalStateException("Test class was null");
+		}
+		if (resourcePath==null) {
+			throw new IllegalStateException("Resource path was null");
+		}
 		URL url = testClass.getResource(resourcePath);
 		if (url==null) {
 			throw new IllegalStateException("Resource not found: "+resourcePath);
@@ -96,7 +102,16 @@ public class UnitTestContext {
 	}
 	public static String extractResourceTo(Class<?> testClass,
 			String resourcePath,String extractDir) throws URISyntaxException, IOException {
+		if (testClass==null) {
+			throw new IllegalStateException("Test class was null");
+		}
+		if (resourcePath==null) {
+			throw new IllegalStateException("Resource path was null");
+		}
 		URL url = testClass.getResource(resourcePath);
+		if (url==null) {
+			throw new IllegalStateException("Resource not found: "+resourcePath);
+		}
 		File resourceFile = new File(url.toURI());
 		File targetDir=new File(extractDir);
 		targetDir.mkdirs();
