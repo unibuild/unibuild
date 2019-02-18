@@ -17,7 +17,7 @@ UniBuild is an open-source, cross-platform, customizable build, deployment and t
 ### What does UniBuild NOT do?
 
 * It does not replace your build tool (such as Maven, Gradle, Make, MSBuild or Composer), it actually helps to join them into goals very easy to execute
-* It is currently not focused on CI (continuous integration), actually integration with the most popular CI tools (Jenkins, Travis etc.) is in progress.
+* It is currently not focused on CI (continuous integration), actually integration with the most popular CI tools (Jenkins, Travis etc.) is planned.
 
 ### When should I be interested in using UniBuild?
 
@@ -33,4 +33,39 @@ Sure there is a great build tool for every platform, but chaining them into one 
 * UniBuild uses Java. Typically a suitable JDK is bundled in the setup packages but you can use your own JDK (at least JDK 8 is required)
 * UniBuild uses the Spring Framework. If you want to develop plugins for UniBuild, you should create Spring components.
 * UniBuild uses Hibernate/JPA2 as database abstraction layer. On a server machine, UniBuild supports MySQL, MS-SQL, Oracle and PosgreSQL. On a client machine, UniBuild uses an SQLite database by default, but any of the supported database servers can be used.
-* UniBuild supports the following platforms: Windows (server and client), Linux (server and client), OSX (client)
+* UniBuild supports the following platforms: Windows (server and client), Linux (server), OSX (client)
+
+
+## Build from source
+
+### Linux (Debian / Ubuntu)
+
+1. Download and Install Oracle JDK 8 (if you don't have it)
+	```
+	sudo apt-get install software-properties-common
+	sudo apt-get install dirmngr
+	sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C2518248EEA14886
+	sudo apt-get update
+	sudo apt-get install oracle-java8-installer
+	```
+	
+2. Install Maven
+	```
+	sudo apt-get install maven
+	```
+	
+3. Create build folder
+	```
+	mkdir /opt/unibuild
+	```
+
+4. Install Git
+	```
+	sudo apt-get install git
+	```
+	
+5. Clone from GitHub
+	```
+	cd /opt/unibuild
+	git clone https://github.com/unibuild/unibuild /opt/unibuild
+	```
