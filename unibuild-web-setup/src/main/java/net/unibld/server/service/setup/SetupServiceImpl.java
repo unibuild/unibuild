@@ -12,11 +12,13 @@ import javax.mail.internet.MimeMessage;
 
 import net.unibld.core.persistence.DriverClassNames;
 import net.unibld.core.util.GlobalConfigExtractor;
+import net.unibld.core.util.PlatformHelper;
 import net.unibld.core.util.PropertiesEditor;
 import net.unibld.server.spring.ServerConfigExtractor;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -145,35 +147,13 @@ public class SetupServiceImpl implements SetupService {
 				}
 				LOGGER.info("Deploying server webapp...");
 				try {
-					CommandLine cmdLine = CommandLine.parse("sh /etc/unibld/scripts/start-deploy.sh");
-	
-					
-					DefaultExecutor executor = new DefaultExecutor();
-					ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
-					
-					PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
-					executor.setStreamHandler(streamHandler);
-	
-					int exitValue = executor.execute(cmdLine);
-					
-					String output = outputStream.toString();
-	
-					
-					if (output!=null) {
-						LOGGER.info("Output: {}", output);
-					}
-					
-	
-					if (exitValue == 0) {
-						LOGGER.info("Successfully executed deploy-server.sh.");
-					} else {
-						LOGGER.error(String.format(
-								"Failed to execute deploy-server.sh, exit value: %d", 
-								exitValue));
-						
+					if (PlatformHelper.isLinux()) {
+						deployServer("sh /etc/unibld/scripts/start-deploy.sh");
+					} else if (PlatformHelper.isWindows()) {
+						deployServer("cmd.exe /c \"c:\\Program Files\\UniBuild\\deploy-server.bat\"");
 					}
 				} catch (Exception ex) {
-					LOGGER.error("Failed to execute deploy-server.sh",ex);
+					LOGGER.error("Failed to execute server deploy",ex);
 				}
 			}
 		});
@@ -187,5 +167,37 @@ public class SetupServiceImpl implements SetupService {
 		File file=new File(path);
 		return file.exists() && file.isFile();
 	}
+
+	private void deployServer(String cmd) throws ExecuteException, IOException {
+		LOGGER.info("Executing deploy: {}...",cmd);
+		CommandLine cmdLine = CommandLine.parse(cmd);
+
+		
+		DefaultExecutor executor = new DefaultExecutor();
+		ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
+		
+		PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
+		executor.setStreamHandler(streamHandler);
+
+		int exitValue = executor.execute(cmdLine);
+		
+		String output = outputStream.toString();
+
+		
+		if (output!=null) {
+			LOGGER.info("Output: {}", output);
+		}
+		
+
+		if (exitValue == 0) {
+			LOGGER.info("Successfully executed {}.",cmd);
+		} else {
+			LOGGER.error(
+					"Failed to execute {}, exit value: {}",cmd, 
+					exitValue);
+			
+		}
+	}
+	
 
 }
