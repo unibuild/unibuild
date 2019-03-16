@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import com.jcraft.jsch.jce.MD5;
-
 import net.unibld.core.exec.CmdContext;
 import net.unibld.core.exec.CmdExecutor;
 import net.unibld.core.util.PlatformHelper;
