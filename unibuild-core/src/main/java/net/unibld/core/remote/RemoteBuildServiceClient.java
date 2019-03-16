@@ -13,6 +13,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -61,35 +62,47 @@ public class RemoteBuildServiceClient {
 	 * Starts a remote build process by uploading a zipped resource file to the remote UniBuild server
 	 * @param ticket Authentication ticket
 	 * @param projectPath Path of the project file on the remote server
-	 * @param goal Goal to execute on the remote server (or null if 'build' should be executed)
+	 * @param goal Goal to execute on the remote server
 	 * @param zipFile Resource zip file to upload
 	 * @return Response DTO from the remote server
 	 * @throws Exception If an error occurs.
 	 */
 	public BuildStartedDto uploadZip(String ticket,String projectPath,String goal,File zipFile) throws Exception {
-		String url = String.format("%s/upload?ticket=%s&path=%s",baseUrl,ticket,URLEncoder.encode(projectPath,"UTF-8"));
-		if (goal!=null) {
-			url+=("&goal="+goal);
-		}
+		String url = String.format("%s/upload?ticket=%s&path=%s&goal=%s",baseUrl,ticket,URLEncoder.encode(projectPath,"UTF-8"),goal);
+		
 		
 		HttpPost httppost = new HttpPost(url);
 		MultipartEntity t = new MultipartEntity();
 		t.addPart("file", new FileBody(zipFile));
-		//t.addPart(new FormBodyPart("t", new FileBody(photo))); I tired this too
 		httppost.setEntity(t);
 		HttpResponse response = httpClient.execute(httppost);
 		ResponseHandler<String> handler = new BasicResponseHandler();
-		String body=handler.handleResponse(response);
-		
-		int code = response.getStatusLine().getStatusCode();
-		
-		
-		if (code!=200) {
-			throw new IOException(String.format("HTTP error: code=%d, body=%s", code,body));
+		try {
+			String body=handler.handleResponse(response);
+			
+			int code = response.getStatusLine().getStatusCode();
+			
+			
+			if (code!=200) {
+				throw new IOException(String.format("HTTP error: code=%d, body=%s", code,body));
+			}
+			
+			Serializer serializer = new Persister();
+			return serializer.read(BuildStartedDto.class, body);
+		} catch (HttpResponseException httpEx) {
+			LOGGER.error("HTTP error: "+httpEx.getStatusCode(),httpEx);
+			if (httpEx.getStatusCode()==400) {
+				throw new IOException("Invalid request (400)",httpEx);
+			} else if (httpEx.getStatusCode()==404) {
+				throw new IOException("Invalid URL (404)",httpEx);
+			} else if (httpEx.getStatusCode()==401) {
+				throw new IOException("Unauthorized (401)",httpEx);
+			} else if (httpEx.getStatusCode()==500) {
+				throw new IOException("Internal server error (500)",httpEx);
+			} else {
+				throw httpEx;
+			}
 		}
-		
-		Serializer serializer = new Persister();
-		return serializer.read(BuildStartedDto.class, body);
 	}
 
 
@@ -100,8 +113,7 @@ public class RemoteBuildServiceClient {
 	}
 
 
-	protected BuildState getBuildState(String ticket,String id) throws IOException,
-			ClientProtocolException, Exception {
+	protected BuildState getBuildState(String ticket,String id) throws Exception {
 		String url = String.format("%s/state?ticket=%s&id=%s",baseUrl,ticket,id);
 		
 		
@@ -149,11 +161,15 @@ public class RemoteBuildServiceClient {
 			File destination=new File(filePath);
 			if (destination.exists()) {
 				try {
-					destination.delete();
-					LOGGER.info("Deleted destination file: "+
+					boolean deleted = destination.delete();
+					if (deleted) {
+						LOGGER.info("Deleted destination file: "+
 							destination.getAbsolutePath());
+					} else {
+						LOGGER.warn("Failed to delete destination file: {}",destination.getAbsolutePath());
+					}
 				} catch (Exception ex) {
-					LOGGER.error("Failed to delete previous audio file", ex);
+					LOGGER.error("Failed to delete destination file: "+destination.getAbsolutePath(), ex);
 				}
 			}
 
