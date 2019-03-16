@@ -9,7 +9,8 @@ import net.unibld.core.task.impl.ThirdPartyTaskRunner;
 
 
 /**
- * A runner for {@link InnoSetupMakeTask} that create a setup.exe based on an Innosetup configuration file (.iis)
+ * A runner for {@link InnoSetupMakeTask} that creates a setup.exe based on an Innosetup configuration file (.iis).
+ * Only available on Windows.
  * @author andor
  *
  */
