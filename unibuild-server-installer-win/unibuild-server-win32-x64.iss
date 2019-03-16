@@ -71,6 +71,7 @@ Name: "{commondesktop}\{#MyAppName}"; IconFilename: "{app}\ubld.ico"; Filename: 
 
 [Run]
 Filename: "{app}\service-install.bat"; WorkingDir: "{app}"; Description: "Installs service"; Flags: nowait postinstall;
+Filename: "{app}\deploy-server.bat"; WorkingDir: "{app}"; Description: "Deploys server web app"; Flags: nowait postinstall;
 [UninstallRun]
 Filename: "{app}\service-uninstall.bat"; WorkingDir: "{app}"; Flags: runhidden
 

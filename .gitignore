@@ -34,6 +34,8 @@ target
 /.metadata/
 /.recommenders
 /Servers/
-x64
-x86
-Output
+/unibuild-server-installer-win/Output
+/unibuild-server-installer-win/bundles/jdk/x64
+/unibuild-server-installer-win/bundles/jdk/x86
+/unibuild-server-installer-win/bundles/tomcat/x64
+/unibuild-server-installer-win/bundles/tomcat/x86
