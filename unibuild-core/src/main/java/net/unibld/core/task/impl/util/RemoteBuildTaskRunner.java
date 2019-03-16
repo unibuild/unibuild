@@ -57,6 +57,19 @@ public class RemoteBuildTaskRunner extends BaseTaskRunner<RemoteBuildTask> {
 		if (projectName==null||projectName.trim().length()==0) {
 			throw new IllegalStateException("Project name was null or empty");
 		}
+		
+		if (task.getHost()==null) {
+			throw new IllegalArgumentException("Host was not specified");
+		}
+		if (task.getTicket()==null) {
+			throw new IllegalArgumentException("Ticket was not specified");
+		}
+		if (task.getProjectFile()==null) {
+			throw new IllegalArgumentException("Project file was not specified");
+		}
+		if (task.getGoal()==null) {
+			throw new IllegalArgumentException("Goal was not specified");
+		}
 		try {
 			RemoteBuildClient cl=new RemoteBuildClient(task.getHost(), task.getTicket(),task.getProjectFile());
 			if (task.getBuildDir()!=null) {

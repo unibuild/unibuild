@@ -43,7 +43,7 @@ public class RemoteBuildClient {
 	
 			zipFile = compressBuildDir();
 			LOGGER.info(
-					"Build dir compressed to: " + zipFile.getAbsolutePath());
+					"Build dir compressed to: {}", zipFile.getAbsolutePath());
 	
 			this.service=new RemoteBuildServiceClient(host);
 			
@@ -82,17 +82,16 @@ public class RemoteBuildClient {
 	}
 
 	private void cleanup() {
-		if (!skipCleanup) {
-			if (zipFile!=null&&zipFile.getParentFile()!=null&&zipFile.getParentFile().exists()) {
-				try {
-					FileUtils.deleteDirectory(zipFile.getParentFile());
-					LOGGER.info("Cleaned up folder: "+zipFile.getParentFile().getAbsolutePath());
-					
-				} catch (IOException e) {
-					LOGGER.error("Failed to cleanup folder: "+zipFile.getParentFile().getAbsolutePath(),e);
-				}
+		if (!skipCleanup && zipFile!=null &&zipFile.getParentFile()!=null&&zipFile.getParentFile().exists()) {
+			try {
+				FileUtils.deleteDirectory(zipFile.getParentFile());
+				LOGGER.info("Cleaned up folder: {}",zipFile.getParentFile().getAbsolutePath());
 				
+			} catch (IOException e) {
+				LOGGER.error("Failed to cleanup folder: "+zipFile.getParentFile().getAbsolutePath(),e);
 			}
+			
+		
 		}
 	}
 
@@ -125,11 +124,10 @@ public class RemoteBuildClient {
 		}
 		File f=new File(filePath);
 		if (!f.exists()||!f.isFile()) {
-			LOGGER.error("File downloaded was invalid: "+filePath);
+			LOGGER.error("File downloaded was invalid: {}",filePath);
 			return false;
 		}
 		
-		//Zip.unzip(f.getAbsolutePath(), outputDir);
 		return true;
 	}
 
@@ -151,7 +149,7 @@ public class RemoteBuildClient {
 			throw new IllegalStateException("Generated build ID was null");
 		}
 		if (res.isStarted()&&res.getStartTime()!=null) {
-			LOGGER.info(String.format("Uploaded file %s to host %s and received generated build id: %s at %s",file.getAbsolutePath(),host,res.getId(),res.getStartTime()));
+			LOGGER.info("Uploaded file {} to host {} and received generated build id: {} at {}",file.getAbsolutePath(),host,res.getId(),res.getStartTime());
 		
 		} else {
 			if (res.getErrorMessage()!=null) {
@@ -173,10 +171,10 @@ public class RemoteBuildClient {
 		String tempFilePath = getTempFilePath();
 		
 		if (includes==null&&excludes==null) {
-			LOGGER.info(String.format("Compressing build dir: %s...",buildDir));
+			LOGGER.info("Compressing build dir: {}...",buildDir);
 			Zip.zip(buildDir, tempFilePath);	
 		} else {
-			LOGGER.info(String.format("Compressing build dir: %s, includes=%s, excludes=%s...",buildDir,traceArray(includes),traceArray(excludes)));
+			LOGGER.info("Compressing build dir: {}, includes={}, excludes={}...",buildDir,traceArray(includes),traceArray(excludes));
 			
 			File build=new File(buildDir);
 			String buildDirName=build.getName();
@@ -296,7 +294,7 @@ public class RemoteBuildClient {
 		File dir = new File(buildDir);
 		if (!dir.exists() || !dir.isDirectory()) {
 			LOGGER.error(
-					"Build dir does not exist: " + buildDir);
+					"Build dir does not exist: {}", buildDir);
 			throw new IllegalStateException("Build dir does not exist: "
 					+ buildDir);
 		}
@@ -329,9 +327,9 @@ public class RemoteBuildClient {
 		}
 
 		LOGGER
-				.info(String.format(
-								"Remote build client inited with: host=%s, project=%s, buildDir=%s, goal=%s, outputDir=%s",
-								host, projectPath, buildDir,goal,outputDir));
+				.info(
+								"Remote build client inited with: host={}, project={}, buildDir={}, goal={}, outputDir={}",
+								host, projectPath, buildDir,goal,outputDir);
 	}
 
 	public String[] getIncludes() {

@@ -31,7 +31,7 @@ public class RemoteBuildApplication
     	}
     	
     	
-        if (defaultArgs.size()<3) {
+        if (defaultArgs.size()<4) {
         	System.out.println(usage());
         	System.exit(1);
         	return;
@@ -40,16 +40,18 @@ public class RemoteBuildApplication
         String host=defaultArgs.get(0);
         String ticket=defaultArgs.get(1);
         String project=defaultArgs.get(2);
+        String goal=defaultArgs.get(3);
         
         
         RemoteBuildClient cl=new RemoteBuildClient(host,ticket, project);
+        cl.setGoal(goal);
         cl.initialize(optArgs);
         cl.executeBuild();
     }
 
 	private static String usage() {
 		StringBuilder b=new StringBuilder();
-		b.append("Usage: remote-build [OPTIONS] HOST PROJECT [BUILD_DIR]\n");
+		b.append("Usage: remote-build [OPTIONS] HOST PROJECT GOAL [BUILD_DIR]\n");
 		return b.toString();
 	}
 }
