@@ -1,1 +1,2 @@
 unibuild-server-installer-win/bundles/jdk/*.zip filter=lfs diff=lfs merge=lfs -text
+unibuild-server-installer-win/bundles/tomcat/*.zip filter=lfs diff=lfs merge=lfs -text
