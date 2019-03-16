@@ -40,3 +40,4 @@ target
 /unibuild-server-installer-win/bundles/tomcat/x64
 /unibuild-server-installer-win/bundles/tomcat/x86
 /dist
+/unibuild-core/logs
