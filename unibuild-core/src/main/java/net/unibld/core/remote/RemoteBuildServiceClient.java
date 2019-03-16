@@ -7,11 +7,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
+import java.nio.file.Files;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.ResponseHandler;
@@ -153,7 +153,7 @@ public class RemoteBuildServiceClient {
 			if (fileName!=null) {
 				url+=("&fileName="+URLEncoder.encode(fileName, "UTF-8"));
 			}
-			String filePath = FilenameUtils.concat(outputPath, fileName!=null?stripFileName(fileName):"output.zip");
+			String filePath = FilenameUtils.concat(outputPath, fileName!=null?FilenameUtils.getName(fileName):"output.zip");
 	        
 			
 			
@@ -161,13 +161,10 @@ public class RemoteBuildServiceClient {
 			File destination=new File(filePath);
 			if (destination.exists()) {
 				try {
-					boolean deleted = destination.delete();
-					if (deleted) {
-						LOGGER.info("Deleted destination file: "+
+					Files.delete(destination.toPath());
+					LOGGER.info("Deleted destination file: "+
 							destination.getAbsolutePath());
-					} else {
-						LOGGER.warn("Failed to delete destination file: {}",destination.getAbsolutePath());
-					}
+					
 				} catch (Exception ex) {
 					LOGGER.error("Failed to delete destination file: "+destination.getAbsolutePath(), ex);
 				}
@@ -201,19 +198,6 @@ public class RemoteBuildServiceClient {
 				 return null;
 			 }
 		
-	}
-
-
-	private String stripFileName(String fileName) {
-		int slash = fileName.lastIndexOf("/");
-		if (slash!=-1) {
-			return fileName.substring(slash+1);
-		}
-		slash = fileName.lastIndexOf("\\");
-		if (slash!=-1) {
-			return fileName.substring(slash+1);
-		}
-		return fileName;
 	}
 
 }
