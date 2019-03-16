@@ -15,7 +15,7 @@ public class TomcatInstallWebappTask extends ServerTask {
 	private static final long serialVersionUID = -5454114610189335414L;
 	private boolean clean;
 	private String war;
-	private String target;
+	private String targetWarName;
 	/**
 	 * @return True if work directory should be cleaned
 	 */
@@ -43,14 +43,14 @@ public class TomcatInstallWebappTask extends ServerTask {
 	/**
 	 * @return Target WAR file name
 	 */
-	public String getTarget() {
-		return target;
+	public String getTargetWarName() {
+		return targetWarName;
 	}
 	/**
 	 * @param target Target WAR file name
 	 */
-	public void setTarget(String target) {
-		this.target = target;
+	public void setTargetWarName(String target) {
+		this.targetWarName = target;
 	}
 	
 }
