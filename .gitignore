@@ -33,3 +33,7 @@ target
 .project
 /.metadata/
 /.recommenders
+/Servers/
+x64
+x86
+Output

@@ -40,7 +40,7 @@ Sure there is a great build tool for every platform, but chaining them into one 
 
 ### Linux (Debian / Ubuntu)
 
-1. Download and Install Oracle JDK 8 (if you don't have it)
+1. Download and install Oracle JDK 8 (if you don't have it)
 	```
 	sudo apt-get install software-properties-common
 	sudo apt-get install dirmngr
@@ -98,3 +98,23 @@ Sure there is a great build tool for every platform, but chaining them into one 
 	```
 	/opt/unibuild/dist/unibuild-${version}.deb
 	```
+	
+	
+### Windows
+
+1. Download and install Oracle JDK 8 (if you don't have it)
+2. Install Maven: https://maven.apache.org/guides/getting-started/windows-prerequisites.html
+3. Create a build folder, for example:
+	```
+	mkdir c:\dev\unibuild
+	```
+4. Install a Git client of your choice (Git for Windows, Tortoise Git etc.)
+5. Clone the repository https://github.com/unibuild/unibuild from GitHub into your build folder (c:\dev\unibuild in the example)
+6. To build a server, execute the build-server-x64.bat or build-server-x86.bat script, for example:
+	```
+	c:\dev\unibuild\build\scripts\win\build-server-x64.bat
+	```
+		
+	You will find the resulting .exe filee in the dist folder created under your build folder
+	
+
