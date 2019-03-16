@@ -2,6 +2,7 @@ package net.unibld.core.task.impl.util;
 
 import java.io.File;
 
+import net.unibld.core.build.BuildException;
 import net.unibld.core.config.ProjectConfig;
 import net.unibld.core.remote.RemoteBuildClient;
 import net.unibld.core.task.BaseTaskRunner;
@@ -59,16 +60,16 @@ public class RemoteBuildTaskRunner extends BaseTaskRunner<RemoteBuildTask> {
 		}
 		
 		if (task.getHost()==null) {
-			throw new IllegalArgumentException("Host was not specified");
+			throw new BuildException("Host was not specified");
 		}
 		if (task.getTicket()==null) {
-			throw new IllegalArgumentException("Ticket was not specified");
+			throw new BuildException("Ticket was not specified");
 		}
 		if (task.getProjectFile()==null) {
-			throw new IllegalArgumentException("Project file was not specified");
+			throw new BuildException("Project file was not specified");
 		}
 		if (task.getGoal()==null) {
-			throw new IllegalArgumentException("Goal was not specified");
+			throw new BuildException("Goal was not specified");
 		}
 		try {
 			RemoteBuildClient cl=new RemoteBuildClient(task.getHost(), task.getTicket(),task.getProjectFile());
