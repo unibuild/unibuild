@@ -155,6 +155,7 @@ public class RemoteBuildWebServiceImpl extends BaseWebService implements IRemote
     		@RequestParam(required=true) String path,
     		@RequestParam(required=true) String goal) throws IOException {
 		
+		LOG.info("Receiving uploaded build file: ticket={}, project path={}, goal={}...",ticket, path, goal);
 		String userId=doAuth(ticket);
 		BuildStartedDto result =null;
 		String guid=UUID.randomUUID().toString();

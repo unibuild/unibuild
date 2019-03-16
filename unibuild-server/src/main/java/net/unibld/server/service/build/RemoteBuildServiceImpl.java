@@ -29,6 +29,7 @@ public class RemoteBuildServiceImpl implements RemoteBuildService {
 	@Transactional
 	public RemoteBuild startRemoteBuild(String id,Project project, String goal,
 			String userId) {
+		LOG.info("Starting remote build {} of project {}: {} (user={})", id, project, goal, userId);
 		UserProfile user = profileRepo.findOne(userId);
 		if (user==null) {
 			throw new IllegalArgumentException("Invalid user id: "+userId);
