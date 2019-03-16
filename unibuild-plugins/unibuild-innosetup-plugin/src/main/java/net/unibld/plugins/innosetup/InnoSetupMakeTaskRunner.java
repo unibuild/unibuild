@@ -1,12 +1,11 @@
 package net.unibld.plugins.innosetup;
 
-import net.unibld.core.task.ExecutionResult;
-import net.unibld.core.task.impl.ThirdPartyTaskRunner;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+
+import net.unibld.core.task.ExecutionResult;
+import net.unibld.core.task.impl.ThirdPartyTaskRunner;
 
 
 /**
