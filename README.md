@@ -35,6 +35,35 @@ Sure there is a great build tool for every platform, but chaining them into one 
 * UniBuild uses Hibernate/JPA2 as database abstraction layer. On a server machine, UniBuild supports MySQL, MS-SQL, Oracle and PosgreSQL. On a client machine, UniBuild uses an SQLite database by default, but any of the supported database servers can be used.
 * UniBuild supports the following platforms: Windows (server and client), Linux (server), OSX (client)
 
+## Installation
+
+### Linux (Debian / Ubuntu)
+
+1. Download and install Oracle JDK 8 (if you don't have it)
+	```
+	sudo apt-get install software-properties-common
+	sudo apt-get install dirmngr
+	sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C2518248EEA14886
+	sudo apt-get update
+	sudo apt-get install oracle-java8-installer
+	```
+	
+2. Remove previous versions if necessary
+	```
+	dpkg -r unibuild
+	```
+	
+3. Download or build the desired .deb package
+
+4. Install the .deb package obtained, for example:
+	```
+	dpkg -i unibuild-0.2.1.deb
+	```
+	
+5. Configure UniBuild
+	If you installed a server package for the first time, you can configure UniBuild using a web-based setup. It is available on the default port 8999, for example: http://localhost:8999. See the details here:  [Configuration using the web setup](https://github.com/unibuild/unibuild/wiki/Configuration-using-the-web-setup).
+    You can always configure UniBuild (in fact, if you installed a CLI-only package, you will need to) using the configuration file. See the details here:  [Manual configuration](https://github.com/unibuild/unibuild/wiki/Manual-configuration).
+	
 
 ## Build from source
 
