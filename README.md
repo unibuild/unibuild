@@ -61,7 +61,9 @@ Sure there is a great build tool for every platform, but chaining them into one 
 	```
 	
 5. Configure UniBuild
-	If you installed a server package for the first time, you can configure UniBuild using a web-based setup. It is available on the default port 8999, for example: http://localhost:8999. See the details here:  [Configuration using the web setup](https://github.com/unibuild/unibuild/wiki/Configuration-using-the-web-setup).
+	
+    If you installed a server package for the first time, you can configure UniBuild using a web-based setup. It is available on the default port 8999, for example: http://localhost:8999. See the details here:  [Configuration using the web setup](https://github.com/unibuild/unibuild/wiki/Configuration-using-the-web-setup).
+    
     You can always configure UniBuild (in fact, if you installed a CLI-only package, you will need to) using the configuration file. See the details here:  [Manual configuration](https://github.com/unibuild/unibuild/wiki/Manual-configuration).
 	
 
