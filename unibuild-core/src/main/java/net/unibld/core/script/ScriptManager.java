@@ -49,7 +49,7 @@ public class ScriptManager {
 	}
 
 	private String getScriptsDirPath() {
-		if (!StringUtils.isEmpty(scriptsDir)) {
+		if (StringUtils.isEmpty(scriptsDir)) {
 			if (PlatformHelper.isWindows()) {
 				return DEFAULT_SCRIPTS_DIR_WINDOWS;
 			} else {
