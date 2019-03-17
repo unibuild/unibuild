@@ -128,7 +128,7 @@ public class TomcatInstallWebappTaskRunner extends ServerTaskRunner<TomcatInstal
 		}
 		File script = scriptManager.installScriptIfNecessary(is, "tomcat", "tomcat-deploy.sh");
 		return String.format("sh %s %s %s %s %s", script.getAbsolutePath(), 
-				serverPath, warFileToInstall, targetWarName, clean?"true":"false");
+				serverPath, warFileToInstall, getContextNameFromWar(targetWarName), clean?"true":"false");
 	}
 	protected void clean(InstanceConfig cfg, File webappDir, String targetWarName) {
 		//cleaning webapps folder
