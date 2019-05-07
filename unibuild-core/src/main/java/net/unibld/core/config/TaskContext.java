@@ -25,6 +25,7 @@ public class TaskContext implements Serializable, Cloneable {
 	private BuildGoalConfig goalConfig;
 	
 	private Map<String,String> attributesMap;
+	private Map<String,Serializable> serializableAttributesMap;
 	
 	
 	/**
@@ -32,6 +33,8 @@ public class TaskContext implements Serializable, Cloneable {
 	 */
 	public TaskContext(){
 		attributesMap=new Hashtable<>();
+		serializableAttributesMap=new Hashtable<>();
+		
 	}
 
 	public Set<String> getAttributeKeys() {
@@ -53,6 +56,18 @@ public class TaskContext implements Serializable, Cloneable {
 		attributesMap.put(name, value);
 	}
 	
+	/**
+	 * Adds a serializable attribute to the context
+	 * @param name Name of the attribute
+	 * @param value Attribute value object
+	 */
+	public void addSerializableAttribute(String name,Serializable value) {
+		if (serializableAttributesMap==null) {
+			serializableAttributesMap=new Hashtable<>();
+		}
+		serializableAttributesMap.put(name, value);
+	}
+	
 	
 	/**
 	 * Returns the value of a string attribute with variables substituted using {@link VariableSupport}
@@ -70,6 +85,14 @@ public class TaskContext implements Serializable, Cloneable {
 		return vars.substitute(attributesMap.get(name),container);
 	}
 	
+	public Serializable getSerializable(String name) {
+		if (serializableAttributesMap==null) {
+			serializableAttributesMap=new Hashtable<>();
+		}
+		return serializableAttributesMap.get(name);
+	}
+
+	
 
 	public Map<String, String> getAttributeMap() {
 		return attributesMap;
@@ -84,6 +107,10 @@ public class TaskContext implements Serializable, Cloneable {
 		if (this.attributesMap!=null) {
 			c2.attributesMap=new HashMap<>();
 			c2.attributesMap.putAll(this.attributesMap);
+		}
+		if (this.serializableAttributesMap!=null) {
+			c2.serializableAttributesMap=new HashMap<>();
+			c2.serializableAttributesMap.putAll(this.serializableAttributesMap);
 		}
 		c2.buildId=this.buildId;
 		return c2;

@@ -22,12 +22,30 @@ public class BuildTestResult {
 	@Id
 	@Column(nullable=false)
 	private String id;
+	
+	@Column(nullable=false, length=255)
+	private String fullClassName;
+	@Column(nullable=false, length=255)
+	private String name;
+	
+	@Column(nullable=true, length=255)
+	private String failureDetail;
+	@Column(nullable=true, length=255)
+	private String failureErrorLine;
+	@Column(nullable=true, length=255)
+	private String failureMessage;
+	@Column(nullable=true, length=100)
+	private String failureType;
+
+	@Column(nullable=false)
+	private float time;
+	
 
 	/**
 	 * Parent test
 	 */
 	@ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-	private BuildTestSuite test; 
+	private BuildTestSuite suite; 
 	
 	@Column(nullable=false)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -37,5 +55,105 @@ public class BuildTestResult {
 	@PrePersist
 	public void prePersist() {
 		this.createDate=new Date();
+	}
+
+
+	public String getId() {
+		return id;
+	}
+
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+
+	public String getFullClassName() {
+		return fullClassName;
+	}
+
+
+	public void setFullClassName(String fullClassName) {
+		this.fullClassName = fullClassName;
+	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public String getFailureDetail() {
+		return failureDetail;
+	}
+
+
+	public void setFailureDetail(String failureDetail) {
+		this.failureDetail = failureDetail;
+	}
+
+
+	public String getFailureErrorLine() {
+		return failureErrorLine;
+	}
+
+
+	public void setFailureErrorLine(String failureErrorLine) {
+		this.failureErrorLine = failureErrorLine;
+	}
+
+
+	public String getFailureMessage() {
+		return failureMessage;
+	}
+
+
+	public void setFailureMessage(String failureMessage) {
+		this.failureMessage = failureMessage;
+	}
+
+
+	public String getFailureType() {
+		return failureType;
+	}
+
+
+	public void setFailureType(String failureType) {
+		this.failureType = failureType;
+	}
+
+
+	public float getTime() {
+		return time;
+	}
+
+
+	public void setTime(float time) {
+		this.time = time;
+	}
+
+
+	public BuildTestSuite getSuite() {
+		return suite;
+	}
+
+
+	public void setSuite(BuildTestSuite suite) {
+		this.suite = suite;
+	}
+
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
 	}
 }

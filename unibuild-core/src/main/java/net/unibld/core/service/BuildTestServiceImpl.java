@@ -11,10 +11,13 @@ import org.springframework.stereotype.Service;
 
 import net.unibld.core.BuildTask;
 import net.unibld.core.persistence.model.Build;
+import net.unibld.core.persistence.model.BuildTestResult;
 import net.unibld.core.persistence.model.BuildTestSuite;
 import net.unibld.core.repositories.BuildRepository;
+import net.unibld.core.repositories.BuildTestResultRepository;
 import net.unibld.core.repositories.BuildTestSuiteRepository;
 import net.unibld.core.task.TaskRegistry;
+import net.unibld.core.test.TestResult;
 import net.unibld.core.test.TestResults;
 import net.unibld.core.test.TestSuite;
 
@@ -30,6 +33,8 @@ public class BuildTestServiceImpl implements BuildTestService {
 	
 	@Autowired
 	private BuildTestSuiteRepository suiteRepo;
+	@Autowired
+	private BuildTestResultRepository resultRepo;
 	
 
 	@Override
@@ -69,6 +74,21 @@ public class BuildTestServiceImpl implements BuildTestService {
 				s.setTaskName(taskName);
 				
 				s=suiteRepo.save(s);
+				
+				if (ts.getResults()!=null) {
+					for (TestResult tr:ts.getResults()) {
+						BuildTestResult r=new BuildTestResult();
+						r.setName(tr.getName());
+						r.setFullClassName(tr.getFullClassName());
+						r.setFailureDetail(tr.getFailureDetail());
+						r.setFailureErrorLine(tr.getFailureErrorLine());
+						r.setFailureMessage(tr.getFailureMessage());
+						r.setFailureType(tr.getFailureType());
+						r.setTime(tr.getTime());
+						r.setSuite(s);
+						resultRepo.save(r);
+					}
+				}
 			}
 		}
 	}
