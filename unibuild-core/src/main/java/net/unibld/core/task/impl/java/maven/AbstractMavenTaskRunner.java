@@ -1,14 +1,18 @@
 package net.unibld.core.task.impl.java.maven;
 
 import net.unibld.core.config.InstallationType;
+import net.unibld.core.service.BuildTestService;
 import net.unibld.core.task.ExecutionResult;
 import net.unibld.core.task.impl.ThirdPartyTaskRunner;
+import net.unibld.core.test.TestResults;
 import net.unibld.core.util.PlatformHelper;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 /**
@@ -18,12 +22,26 @@ import org.springframework.util.StringUtils;
  * @param <T> Generic Maven task parameter
  */
 public abstract class AbstractMavenTaskRunner<T extends MavenTask> extends ThirdPartyTaskRunner<T> {
+	@Autowired
+	private SurefireTestResultParser surefireParser;
+	@Autowired
+	private BuildTestService buildTestService;
+	
 	@Override
 	protected ExecutionResult execute(T task) {
 		String baseDirectory = task.getBaseDirectory();
 		logTask("Executing Maven in {0} with arguments: {1}...",baseDirectory!=null?baseDirectory:".", getArguments(task));
 		
-		return super.execute(task);
+		ExecutionResult ret = super.execute(task);
+		try {
+			TestResults results = surefireParser.parseTestResults(FilenameUtils.concat(baseDirectory, "target/surefire-reports"));
+			if (results!=null) {
+				buildTestService.saveTestResults(task.getContext().getBuildId(), task, results);
+			}
+		} catch (Exception ex) {
+			LoggerFactory.getLogger(getClass()).error("Failed to parse test results",ex);
+		}
+		return ret;
 	}
 
 

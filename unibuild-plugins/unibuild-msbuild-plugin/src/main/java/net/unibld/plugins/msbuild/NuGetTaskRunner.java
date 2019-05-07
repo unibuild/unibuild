@@ -36,13 +36,6 @@ public class NuGetTaskRunner extends ThirdPartyTaskRunner<NuGetTask>{
 		if (task==null) {
 			throw new IllegalStateException("Task was null");
 		}
-		if (task.getTaskConfig()==null) {
-			throw new IllegalStateException("Task config was null");
-		}
-		if (task.getTaskConfig().getTaskContext()==null) {
-			throw new IllegalStateException("Task context was null");
-		}
-		
 		
 		if (StringUtils.isEmpty(task.getCommand())) {
 			throw new BuildException("Command not specified");
