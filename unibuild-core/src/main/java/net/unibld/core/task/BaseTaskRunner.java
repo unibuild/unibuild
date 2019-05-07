@@ -39,7 +39,7 @@ public abstract class BaseTaskRunner<T extends BuildTask> implements ITaskRunner
 
 		@Override
 		public String getBuildContextAttribute(String name) {
-			TaskContext ctx=task.getTaskConfig().getTaskContext();
+			TaskContext ctx=task.getContext();
 			if (ctx!=null) {
 				String val = ctx.getAttribute(variableSupport,this,name);
 				LoggerFactory.getLogger(getClass()).debug("Returning task context attribute: {} = {}...",name, val);
@@ -54,7 +54,7 @@ public abstract class BaseTaskRunner<T extends BuildTask> implements ITaskRunner
 		public Map<String, String> getTaskContextAttributeMap() {
 			Map<String,String> ret=new HashMap<String,String>();
 			
-			TaskContext ctx=task.getTaskConfig().getTaskContext();
+			TaskContext ctx=task.getContext();
 			Set<String> keys = ctx.getAttributeKeys();
 			
 			if (ctx!=null) {
@@ -78,7 +78,7 @@ public abstract class BaseTaskRunner<T extends BuildTask> implements ITaskRunner
 		
 	}
 	
-	protected Map<String,Object> attributesByBuildId=new Hashtable<String, Object>();
+	protected Map<String,Object> attributesByBuildId=new Hashtable<>();
 	@Autowired
 	private LoggingScheme logging;
 	@Autowired
@@ -153,10 +153,8 @@ public abstract class BaseTaskRunner<T extends BuildTask> implements ITaskRunner
 		if (task==null) {
 			throw new IllegalArgumentException("Task was null");
 		}
-		if (task.getTaskConfig()==null) {
-			throw new IllegalStateException("TaskConfig was null");
-		}
-		TaskContext ctx = task.getTaskConfig().getTaskContext();
+		
+		TaskContext ctx = task.getContext();
 		if (ctx==null) {
 			throw new IllegalStateException("TaskContext was null");
 		}
@@ -173,15 +171,13 @@ public abstract class BaseTaskRunner<T extends BuildTask> implements ITaskRunner
 		if (task==null) {
 			throw new IllegalArgumentException("Task was null");
 		}
-		if (task.getTaskConfig()==null) {
-			throw new IllegalStateException("TaskConfig was null");
-		}
-		TaskContext ctx = task.getTaskConfig().getTaskContext();
+		
+		TaskContext ctx = task.getContext();
 		if (ctx==null) {
 			throw new IllegalStateException("TaskContext was null");
 		}
 		
-		return (ProjectConfig) ctx.getSerializable(BuildConstants.VARIABLE_NAME_PROJECT_CONFIG);
+		return ctx.getProjectConfig();
 		
 	}
 	
@@ -190,14 +186,12 @@ public abstract class BaseTaskRunner<T extends BuildTask> implements ITaskRunner
 		if (task==null) {
 			throw new IllegalArgumentException("Task was null");
 		}
-		if (task.getTaskConfig()==null) {
-			throw new IllegalStateException("TaskConfig was null");
-		}
-		TaskContext ctx = task.getTaskConfig().getTaskContext();
+		
+		TaskContext ctx = task.getContext();
 		if (ctx==null) {
 			throw new IllegalStateException("TaskContext was null");
 		}
-		return (BuildGoalConfig) ctx.getSerializable(BuildConstants.VARIABLE_NAME_GOAL_CONFIG);
+		return ctx.getGoalConfig();
 		
 	}
 	public String getBuildContextAttribute(T task,String name) {
@@ -211,7 +205,7 @@ public abstract class BaseTaskRunner<T extends BuildTask> implements ITaskRunner
 	}
 	
 	public void setTaskContextAttribute(BuildTask task,String name,String value) {
-		TaskContext ctx=task.getTaskConfig().getTaskContext();
+		TaskContext ctx=task.getContext();
 		if (ctx!=null) {
 			ctx.addAttribute(name, value);
 			LoggerFactory.getLogger(getClass()).info("Task context attribute set: {} = {}...",name, value);

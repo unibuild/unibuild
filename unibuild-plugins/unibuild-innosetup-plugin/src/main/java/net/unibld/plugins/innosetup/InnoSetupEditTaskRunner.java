@@ -87,12 +87,7 @@ public class InnoSetupEditTaskRunner extends BaseTaskRunner<InnoSetupEditTask> {
 		if (task==null) {
 			throw new IllegalStateException("Task was null");
 		}
-		if (task.getTaskConfig()==null) {
-			throw new IllegalStateException("Task config was null");
-		}
-		if (task.getTaskConfig().getTaskContext()==null) {
-			throw new IllegalStateException("Task context was null");
-		}
+		
 		logTask("Editing InnoSetup .iss file: {0}...", task.getIssPath());
 			
 		

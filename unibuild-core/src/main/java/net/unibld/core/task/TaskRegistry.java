@@ -1,22 +1,19 @@
 package net.unibld.core.task;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
-import net.unibld.core.BuildTask;
-import net.unibld.core.build.BuildException;
-import net.unibld.core.config.TaskConfig;
-import net.unibld.core.task.annotations.Task;
-
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import net.unibld.core.BuildTask;
+import net.unibld.core.build.BuildException;
+import net.unibld.core.task.annotations.Task;
 
 /**
  * A registry for tasks that can be run in a UniBuild context.<br>
@@ -106,32 +103,7 @@ public class TaskRegistry {
 			throw new BuildException("Failed to instantiate build task: "+klazz.getName(),e);
 		} 
 	}
-	/**
-	 * Instantiates tasks for a list of {@link TaskConfig} objects (one each)
-	 * @param taskConfigs Task config list
-	 * @return Build task instance list
-	 * @throws BuildException If any error occurs during instantiation
-	 */
-	public List<BuildTask> instantiateTasks(List<TaskConfig> taskConfigs) {
-		if (taskConfigs==null) {
-			throw new IllegalArgumentException("TaskConfig list was null");
-		}
-		if (taskConfigs.isEmpty()) {
-			throw new IllegalArgumentException("TaskConfig list was empty");
-		}
-		
-		List<BuildTask> ret=new ArrayList<>();
-		for (TaskConfig tc:taskConfigs) {
-			BuildTask t=instantiateTask(tc);
-			ret.add(t);
-		}
-		return ret;
-	}
-	private BuildTask instantiateTask(TaskConfig taskConfig) {
-		BuildTask task = newTaskInstance(taskConfig.getTaskType());
-		task.setTaskConfig(taskConfig);
-		return task;
-	}
+	
 	
 	/**
 	 * Returns the unique task name for a task class

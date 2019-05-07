@@ -3,12 +3,6 @@ package net.unibld.core.task;
 import java.io.File;
 import java.io.IOException;
 
-import net.unibld.core.config.TaskConfig;
-import net.unibld.core.config.TaskContext;
-import net.unibld.core.task.impl.sys.MkdirTask;
-import net.unibld.core.task.impl.sys.MkdirTaskRunner;
-import net.unibld.core.test.UnitTestContext;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -17,6 +11,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import net.unibld.core.config.TaskContext;
+import net.unibld.core.task.impl.sys.MkdirTask;
+import net.unibld.core.task.impl.sys.MkdirTaskRunner;
+import net.unibld.core.test.UnitTestContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/test-context.xml"})
@@ -52,9 +51,7 @@ public class MkdirTaskRunnerTest {
 
 	private void execute(String path,boolean logging) {
 		MkdirTask t=new MkdirTask();
-		t.setTaskConfig(new TaskConfig());
-		t.getTaskConfig().setTaskType("mkdir");
-		t.getTaskConfig().setTaskContext(new TaskContext());
+		t.setContext(new TaskContext());
 		
 		t.setPath(path);
 		

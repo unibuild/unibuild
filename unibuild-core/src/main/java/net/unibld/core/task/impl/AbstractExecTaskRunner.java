@@ -136,10 +136,8 @@ public abstract class AbstractExecTaskRunner<T extends ExecTask> extends BaseTas
 		if (task==null) {
 			throw new IllegalStateException("Task was null");
 		}
-		if (task.getTaskConfig()==null) {
-			throw new IllegalStateException("Task config was null");
-		}
-		if (task.getTaskConfig().getTaskContext()==null) {
+		
+		if (task.getContext()==null) {
 			throw new IllegalStateException("Task context was null");
 		}
 		

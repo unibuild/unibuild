@@ -19,7 +19,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import net.unibld.core.build.BuildConstants;
 import net.unibld.core.config.BuildGoalsConfig;
 import net.unibld.core.config.ProjectConfig;
-import net.unibld.core.config.TaskConfig;
 import net.unibld.core.config.TaskContext;
 import net.unibld.core.security.PasswordStrategy;
 import net.unibld.core.test.TestCredentialStoreFactory;
@@ -93,15 +92,12 @@ public class AndroidSignApkTaskRunnerTest {
 	private void runTask(AndroidSignApkTask t,String folder) {
 		t.setPasswordStrategy(PasswordStrategy.stored);
 
-		t.setTaskConfig(new TaskConfig());
-		t.getTaskConfig().setTaskContext(new TaskContext());
+		t.setContext(new TaskContext());
 		ProjectConfig pc = new ProjectConfig();
 		pc.setGoalsConfig(new BuildGoalsConfig());
-		t.getTaskConfig().getTaskContext().addSerializableAttribute(BuildConstants.VARIABLE_NAME_PROJECT_CONFIG, pc);
-		t.getTaskConfig().getTaskContext().addAttribute(BuildConstants.VARIABLE_NAME_BUILD_DIR, folder);
+		t.getContext().setProjectConfig(pc);
+		t.getContext().addAttribute(BuildConstants.VARIABLE_NAME_BUILD_DIR, folder);
 		
-		AndroidSignApkTaskRunner r=new AndroidSignApkTaskRunner();
-		//r.setCredentialStoreFactory(CredentialStoreUtils.getTestCredentialStoreFactory(folder,"test_alias","test12",true,true,false));
 		testCredentialStoreFactory.setUser("test_alias");
 		testCredentialStoreFactory.setPasswd("test12");
 		testCredentialStoreFactory.setPasswordOk(true);

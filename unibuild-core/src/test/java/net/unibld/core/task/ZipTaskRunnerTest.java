@@ -3,13 +3,6 @@ package net.unibld.core.task;
 import java.io.File;
 import java.io.IOException;
 
-import net.unibld.core.config.TaskConfig;
-import net.unibld.core.config.TaskContext;
-import net.unibld.core.task.impl.util.ZipTask;
-import net.unibld.core.task.impl.util.ZipTaskRunner;
-import net.unibld.core.test.UnitTestContext;
-import net.unibld.core.util.Zip;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.junit.Assert;
@@ -19,6 +12,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import net.unibld.core.config.TaskContext;
+import net.unibld.core.task.impl.util.ZipTask;
+import net.unibld.core.task.impl.util.ZipTaskRunner;
+import net.unibld.core.test.UnitTestContext;
+import net.unibld.core.util.Zip;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/test-context.xml"})
@@ -109,9 +108,7 @@ public class ZipTaskRunnerTest {
 	
 	private void executeDir(File dir,String target,boolean logging) {
 		ZipTask t=new ZipTask();
-		t.setTaskConfig(new TaskConfig());
-		t.getTaskConfig().setTaskType("zip");
-		t.getTaskConfig().setTaskContext(new TaskContext());
+		t.setContext(new TaskContext());
 		t.setDir(dir.getAbsolutePath());
 		t.setOutput(target);
 		
@@ -121,9 +118,7 @@ public class ZipTaskRunnerTest {
 	
 	private void executeFiles(File[] files,String target,boolean logging) {
 		ZipTask t=new ZipTask();
-		t.setTaskConfig(new TaskConfig());
-		t.getTaskConfig().setTaskType("zip");
-		t.getTaskConfig().setTaskContext(new TaskContext());
+		t.setContext(new TaskContext());
 		StringBuilder b=new StringBuilder();
 		int i=0;
 		for (File f:files) {

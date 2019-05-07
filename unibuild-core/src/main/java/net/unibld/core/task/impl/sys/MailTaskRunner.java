@@ -35,12 +35,6 @@ public class MailTaskRunner extends BaseTaskRunner<MailTask> {
 			throw new IllegalStateException("Task was null");
 		}
 		
-		if (task.getTaskConfig()==null) {
-			throw new IllegalStateException("Task config was null");
-		}
-		if (task.getTaskConfig().getTaskContext()==null) {
-			throw new IllegalStateException("Task context was null");
-		}
 		
 		if (StringUtils.isEmpty(emailService.getHost())) {
 			throw new BuildException("SMTP host not configured.");

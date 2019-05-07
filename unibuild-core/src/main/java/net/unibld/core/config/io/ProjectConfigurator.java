@@ -30,8 +30,8 @@ import net.unibld.core.config.BuildGoalConfig;
 import net.unibld.core.config.BuildGoalsConfig;
 import net.unibld.core.config.BuildTemplateConfig;
 import net.unibld.core.config.ProjectConfig;
-import net.unibld.core.config.TaskConfig;
 import net.unibld.core.config.TaskConfigurations;
+import net.unibld.core.config.TaskContext;
 import net.unibld.core.persistence.model.ProjectAccessLevel;
 import net.unibld.core.task.TaskRegistry;
 import net.unibld.core.util.jaxb.JAXBUtil;
@@ -347,11 +347,11 @@ public class ProjectConfigurator extends Dom4JJaxbConfigurator<ProjectConfig> {
 				PropertyDescriptor[] propertyDescriptors = 
 					    Introspector.getBeanInfo(task.getClass()).getPropertyDescriptors();
 				BuildTask t2 = task.getClone();
-				if (task.getTaskConfig()!=null) {
-					t2.setTaskConfig(task.getTaskConfig().getClone());
+				if (task.getContext()!=null) {
+					t2.setContext(task.getContext().getClone());
 				}
 				for (PropertyDescriptor propertyDescriptor:propertyDescriptors) {
-					if (!propertyDescriptor.getPropertyType().equals(TaskConfig.class)) {
+					if (!propertyDescriptor.getPropertyType().equals(TaskContext.class)) {
 						substitutePropertyValue(ictx, t2, propertyDescriptor);	
 					}
 				}
@@ -379,8 +379,6 @@ public class ProjectConfigurator extends Dom4JJaxbConfigurator<ProjectConfig> {
 		
 		try {
 			BuildTask ret = klazz.newInstance();
-			ret.setTaskConfig(new TaskConfig());
-			ret.getTaskConfig().setTaskType(element.getName());
 			
 			
 			PropertyDescriptor[] propertyDescriptors = 

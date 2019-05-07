@@ -18,7 +18,6 @@ import net.unibld.core.build.BuildToolContext;
 import net.unibld.core.build.ProjectLoader;
 import net.unibld.core.config.BuildGoalConfig;
 import net.unibld.core.config.ProjectConfig;
-import net.unibld.core.config.TaskConfig;
 import net.unibld.core.task.TaskRegistry;
 import net.unibld.core.util.PropertyPlaceHolderUtils;
 
@@ -124,8 +123,6 @@ public class BuildProjectFactory {
 			
 			try {
 				BuildTask ret = klazz.newInstance();
-				ret.setTaskConfig(new TaskConfig());
-				ret.getTaskConfig().setTaskType(taskName);
 				p.getTasks().add(ret);
 			} catch (Exception ex) {
 				LOG.error("Failed to instantiate utility task: "+taskName,ex);

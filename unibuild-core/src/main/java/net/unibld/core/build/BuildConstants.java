@@ -7,7 +7,6 @@ public class BuildConstants {
 	 * build directory
 	 */
 	public static final String VARIABLE_NAME_BUILD_DIR="build.dir";
-	public static final String VARIABLE_NAME_BUILD_ID="build.id";
 	public static final String VARIABLE_NAME_BUILD_START_DATE="build.start.date";
 	public static final String VARIABLE_NAME_BUILD_START_TIME="build.start.time";
 	/**
@@ -15,12 +14,8 @@ public class BuildConstants {
 	 * project directory
 	 */
 	public static final String VARIABLE_NAME_PROJECT_DIR="project.dir";
-	public static final String VARIABLE_NAME_PROJECT_CONFIG="project.config";
-	public static final String VARIABLE_NAME_GOAL_CONFIG="goal.config";
-	public static final String VARIABLE_NAME_BUILD_TOOL_CONTEXT="tool.context";
 	
 	public static final String VARIABLE_NAME_BUILD_DATE = "build.date";
-	public static final String VARIABLE_NAME_FAILURE_REASON = "build.failure.reason";
 	
 	public static final String ERR_PROJECT_FILE_DOES_NOT_EXIST = "Project file does not exist";
 	public static final String ERR_NO_TASKS = "No tasks were defined";

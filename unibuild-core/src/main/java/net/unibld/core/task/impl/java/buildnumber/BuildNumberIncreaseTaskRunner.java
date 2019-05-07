@@ -40,12 +40,7 @@ public class BuildNumberIncreaseTaskRunner extends BaseTaskRunner<BuildNumberInc
 		if (task==null) {
 			throw new IllegalStateException("Task was null");
 		}
-		if (task.getTaskConfig()==null) {
-			throw new IllegalStateException("Task config was null");
-		}
-		if (task.getTaskConfig().getTaskContext()==null) {
-			throw new IllegalStateException("Task context was null");
-		}
+		
 		logTask("Increasing build number in: {0}...", task.getBuildNumberProperties());
 			
 		File propsFile=new File(task.getBuildNumberProperties());

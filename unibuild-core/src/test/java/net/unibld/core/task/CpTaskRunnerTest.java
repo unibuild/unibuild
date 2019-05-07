@@ -3,12 +3,6 @@ package net.unibld.core.task;
 import java.io.File;
 import java.io.IOException;
 
-import net.unibld.core.config.TaskConfig;
-import net.unibld.core.config.TaskContext;
-import net.unibld.core.task.impl.sys.CpTask;
-import net.unibld.core.task.impl.sys.CpTaskRunner;
-import net.unibld.core.test.UnitTestContext;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -17,6 +11,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import net.unibld.core.config.TaskContext;
+import net.unibld.core.task.impl.sys.CpTask;
+import net.unibld.core.task.impl.sys.CpTaskRunner;
+import net.unibld.core.test.UnitTestContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/test-context.xml"})
@@ -76,9 +75,7 @@ public class CpTaskRunnerTest {
 	
 	private void execute(File file,String target,boolean logging) {
 		CpTask t=new CpTask();
-		t.setTaskConfig(new TaskConfig());
-		t.getTaskConfig().setTaskType("cp");
-		t.getTaskConfig().setTaskContext(new TaskContext());
+		t.setContext(new TaskContext());
 		//t.getTaskConfig().getTaskContext().addAttribute(BuildConstants.VARIABLE_NAME_BUILD_DIR, dir.getAbsolutePath());
 		t.setSource(file.getAbsolutePath());
 		t.setTarget(target);

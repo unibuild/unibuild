@@ -36,12 +36,7 @@ public class VersionFileCreateTaskRunner extends BaseTaskRunner<VersionFileCreat
 		if (task==null) {
 			throw new IllegalStateException("Task was null");
 		}
-		if (task.getTaskConfig()==null) {
-			throw new IllegalStateException("Task config was null");
-		}
-		if (task.getTaskConfig().getTaskContext()==null) {
-			throw new IllegalStateException("Task context was null");
-		}
+		
 		if (StringUtils.isEmpty(task.getPath())) {
 			throw new IllegalStateException("Output path was not specified");
 		}

@@ -21,8 +21,8 @@ import net.unibld.core.persistence.model.Build;
 import net.unibld.core.service.BuildService;
 import net.unibld.core.task.BaseTaskRunner;
 import net.unibld.core.task.ITaskRunner;
+import net.unibld.core.task.TaskRegistry;
 import net.unibld.core.task.annotations.Task;
-import net.unibld.core.var.VariableSupport;
 
 /**
  * A Spring bean that runs a build on a specified project.
@@ -50,7 +50,7 @@ public class ProjectBuilder {
 	@Autowired
 	private ApplicationContext applicationContext;
 	@Autowired
-	private VariableSupport variableSupport;
+	private TaskRegistry taskRegistry;
 	
 	
 	
@@ -143,7 +143,7 @@ public class ProjectBuilder {
 			} catch (Exception ex ) {
 				String klazzName = t.getClass().getSimpleName();
 				loggingScheme.logTaskResult(klazzName, TaskResult.FAILED);
-				loggingScheme.logTaskFailureReason(klazzName, getFailureReason(runner,t,ex));
+				loggingScheme.logTaskFailureReason(klazzName, getFailureReason(t,ex));
 				
 				String logFilePath=null;
 				if (ex instanceof BuildException) {
@@ -243,12 +243,9 @@ public class ProjectBuilder {
 	}
 
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private String getFailureReason(BaseTaskRunner runner,BuildTask task,Exception ex) {
-		if (task!=null && task.getTaskConfig()!=null && task.getTaskConfig().getTaskContext()!=null) {
-			TaskContext context= task.getTaskConfig().getTaskContext();
-			String ret = context.getAttribute(variableSupport,runner.createAttributeContainer(task),
-					BuildConstants.VARIABLE_NAME_FAILURE_REASON);
+	private String getFailureReason(BuildTask task,Exception ex) {
+		if (task!=null && task.getContext()!=null) {
+			String ret = task.getContext().getFailureReason();
 			if (ret!=null) {
 				return ret;
 			}
@@ -287,18 +284,24 @@ public class ProjectBuilder {
 			throw new IllegalArgumentException("Runner was null");
 		}
 		
-		LOG.info("[{}] {} started -----------------------",taskNumber,buildTask.getTaskConfig().getTaskType());
+		
+		String taskName = taskRegistry.getTaskNameByClass(buildTask.getClass());
+		if (taskName==null) {
+			throw new IllegalStateException("Task name not found for: "+buildTask.getClass().getName());
+		}
+		
+		LOG.info("[{}] {} started -----------------------",taskNumber,taskName);
 		LOG.debug("Using runner: {}",runner.getClass().getName());
 
-		prepareRunner(context,project,goal,runner,buildTask);
+		prepareRunner(context,project,goal,taskNumber,buildTask,runner);
 		runner.run(buildTask);
 		
-		LOG.info("[{}] {} completed -----------------------",taskNumber,buildTask.getTaskConfig().getTaskType());
+		LOG.info("[{}] {} completed -----------------------",taskNumber,taskName);
 		
 	}
 
 	private TaskContext prepareRunner(BuildToolContext context,BuildProject project,
-			String goal,ITaskRunner<? extends BuildTask> runner, BuildTask buildTask) {
+			String goal,int taskNumber, BuildTask buildTask, ITaskRunner<? extends BuildTask> runner) {
 		if (buildTask==null) {
 			throw new IllegalArgumentException("Build task was null");
 		}
@@ -307,21 +310,23 @@ public class ProjectBuilder {
 		}
 		
 
-		TaskContext taskCtx = buildTask.getTaskConfig().getTaskContext();
+		TaskContext taskCtx = buildTask.getContext();
 		if (taskCtx==null) {
 			LOG.debug("Creating TaskContext as it was null previously...");
 			taskCtx=new TaskContext();
-			buildTask.getTaskConfig().setTaskContext(taskCtx);
+			buildTask.setContext(taskCtx);
 		}
 		
-		taskCtx.addAttribute(BuildConstants.VARIABLE_NAME_BUILD_ID, context.getId());
+		taskCtx.setBuildId(context.getId());
+		taskCtx.setTaskIndex(taskNumber);
+		
 		taskCtx.addAttribute(BuildConstants.VARIABLE_NAME_PROJECT_DIR, context.getProjectDir());
 		LOG.info("Using project dir: {}...",context.getProjectDir());
 		taskCtx.addAttribute(BuildConstants.VARIABLE_NAME_BUILD_DIR, context.getBuildDir());
 		LOG.info("Using project dir: {}...",context.getBuildDir());
 		
 		
-		taskCtx.addSerializableAttribute(BuildConstants.VARIABLE_NAME_PROJECT_CONFIG, project.getProjectConfig());
+		taskCtx.setProjectConfig(project.getProjectConfig());
 		
 		//adding variables
 		if (context.getVariables()!=null) {
@@ -341,7 +346,7 @@ public class ProjectBuilder {
 			
 			}
 			if (goalCfg!=null) {
-				taskCtx.addSerializableAttribute(BuildConstants.VARIABLE_NAME_GOAL_CONFIG, goalCfg);
+				taskCtx.setGoalConfig(goalCfg);;
 			}
 				
 		}

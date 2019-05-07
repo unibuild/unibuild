@@ -36,13 +36,6 @@ public class SshExecTaskRunner extends AbstractSshTaskRunner<SshTask>{
 			throw new IllegalStateException("Task was null");
 		}
 		
-		if (task.getTaskConfig()==null) {
-			throw new IllegalStateException("Task config was null");
-		}
-		if (task.getTaskConfig().getTaskContext()==null) {
-			throw new IllegalStateException("Task context was null");
-		}
-		
 		if (StringUtils.isEmpty(task.getRemoteCommand())) {
 			throw new BuildException("Remote command was not specified");
 		}

@@ -1,7 +1,7 @@
 package net.unibld.core;
 import java.io.Serializable;
 
-import net.unibld.core.config.TaskConfig;
+import net.unibld.core.config.TaskContext;
 
 /**
  * The basic unit in the build process that defines a single, integer task to execute.
@@ -12,24 +12,12 @@ public abstract class BuildTask implements Serializable,Cloneable {
 	
 	private static final long serialVersionUID = -7612134733434914560L;
 
-	private TaskConfig taskConfig;
+	protected TaskContext context;
 
 	protected String executeCondition;
 	
 
-	/**
-	 * @return Configuration of the task
-	 */
-	public TaskConfig getTaskConfig() {
-		return taskConfig;
-	}
-
-	/**
-	 * @param taskConfig Configuration of the task
-	 */
-	public void setTaskConfig(TaskConfig taskConfig) {
-		this.taskConfig = taskConfig;
-	}
+	
 
 	/**
 	 * @return An exectution condition in EL or null
@@ -54,6 +42,14 @@ public abstract class BuildTask implements Serializable,Cloneable {
 
 	public BuildTask getClone() throws CloneNotSupportedException {
 		return (BuildTask) clone();
+	}
+
+	public TaskContext getContext() {
+		return context;
+	}
+
+	public void setContext(TaskContext context) {
+		this.context = context;
 	}
 
 	

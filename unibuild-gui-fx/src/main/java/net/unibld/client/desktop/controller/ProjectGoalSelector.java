@@ -29,6 +29,7 @@ import net.unibld.core.build.BuildConstants;
 import net.unibld.core.config.BuildGoalConfig;
 import net.unibld.core.config.ProjectConfig;
 import net.unibld.core.persistence.model.Project;
+import net.unibld.core.task.TaskRegistry;
 
 /**
  * A class that handles project and goal selections.
@@ -209,7 +210,7 @@ public class ProjectGoalSelector {
 					int idx=0;
 					for (BuildTask task:tasks) {
 						taskStatesByIndex.put(idx, new TaskState(task, new SimpleObjectProperty<Image>(Icons.getWaitingIcon())));
-						selectedGoalTasks.add(new GoalTaskItem(idx,task.getTaskConfig().getTaskType()));
+						selectedGoalTasks.add(new GoalTaskItem(idx,getTaskName(task)));
 						idx++;
 					}
 				}
@@ -219,6 +220,11 @@ public class ProjectGoalSelector {
 			selectedGoalProperty.set("");
 		}
 	}
+	
+	private String getTaskName(BuildTask task) {
+		return SpringBeanFactory.getBean(TaskRegistry.class).getTaskNameByClass(task.getClass());
+	}
+	
 
 	public String getSelectedGoal() {
 		return selectedGoalProperty.get();

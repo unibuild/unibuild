@@ -2,18 +2,17 @@ package net.unibld.core.task;
 
 import java.io.IOException;
 
-import net.unibld.core.config.TaskConfig;
-import net.unibld.core.config.TaskContext;
-import net.unibld.core.task.impl.sys.SshExecTaskRunner;
-import net.unibld.core.task.impl.sys.SshTask;
-import net.unibld.core.test.TestCredentialStoreFactory;
-
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import net.unibld.core.config.TaskContext;
+import net.unibld.core.task.impl.sys.SshExecTaskRunner;
+import net.unibld.core.task.impl.sys.SshTask;
+import net.unibld.core.test.TestCredentialStoreFactory;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/test-context.xml"})
@@ -46,9 +45,7 @@ public class SshExecTaskRunnerTest {
 
 	private void execute(String host,int port, String user,String command) {
 		SshTask t=new SshTask();
-		t.setTaskConfig(new TaskConfig());
-		t.getTaskConfig().setTaskType("ssh");
-		t.getTaskConfig().setTaskContext(new TaskContext());
+		t.setContext(new TaskContext());
 		
 		t.setHost(host);
 		t.setPort(port);

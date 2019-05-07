@@ -3,13 +3,6 @@ package net.unibld.core.task;
 import java.io.File;
 import java.io.IOException;
 
-import net.unibld.core.config.TaskConfig;
-import net.unibld.core.config.TaskContext;
-import net.unibld.core.task.impl.sys.ChmodTask;
-import net.unibld.core.task.impl.sys.ChmodTaskRunner;
-import net.unibld.core.test.UnitTestContext;
-import net.unibld.core.util.PlatformHelper;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -18,6 +11,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import net.unibld.core.config.TaskContext;
+import net.unibld.core.task.impl.sys.ChmodTask;
+import net.unibld.core.task.impl.sys.ChmodTaskRunner;
+import net.unibld.core.test.UnitTestContext;
+import net.unibld.core.util.PlatformHelper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/test-context.xml"})
@@ -74,9 +73,7 @@ public class ChmodTaskRunnerTest {
 	
 	private void execute(File file,String mode,boolean recursive,boolean logging) {
 		ChmodTask t=new ChmodTask();
-		t.setTaskConfig(new TaskConfig());
-		t.getTaskConfig().setTaskType("chmod");
-		t.getTaskConfig().setTaskContext(new TaskContext());
+		t.setContext(new TaskContext());
 		//t.getTaskConfig().getTaskContext().addAttribute(BuildConstants.VARIABLE_NAME_BUILD_DIR, dir.getAbsolutePath());
 		t.setPath(file.getAbsolutePath());
 		t.setMode(mode);

@@ -3,13 +3,6 @@ package net.unibld.plugins.cvs;
 import java.io.File;
 import java.io.IOException;
 
-import net.unibld.core.config.TaskConfig;
-import net.unibld.core.config.TaskContext;
-import net.unibld.core.security.PasswordStrategy;
-import net.unibld.core.test.UnitTestContext;
-import net.unibld.plugins.cvs.CvsTask;
-import net.unibld.plugins.cvs.CvsTaskRunner;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.junit.Ignore;
@@ -18,6 +11,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import net.unibld.core.config.TaskContext;
+import net.unibld.core.security.PasswordStrategy;
+import net.unibld.core.test.UnitTestContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/cvs-test-context.xml"})
@@ -59,9 +56,7 @@ public class CvsTaskRunnerWinTest {
 		t.setRepositoryPath(path);
 		t.setModule(module);
 		t.setPasswordStrategy(strategy);
-		t.setTaskConfig(new TaskConfig());
-		t.getTaskConfig().setTaskType("cvs");
-		t.getTaskConfig().setTaskContext(new TaskContext());
+		t.setContext(new TaskContext());
 		
 		runner.run(t);
 	}

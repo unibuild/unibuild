@@ -27,12 +27,7 @@ public final class ClearPasswordsTaskRunner extends BaseTaskRunner<ClearPassword
 		if (task==null) {
 			throw new IllegalStateException("Task was null");
 		}
-		if (task.getTaskConfig()==null) {
-			throw new IllegalStateException("Task config was null");
-		}
-		if (task.getTaskConfig().getTaskContext()==null) {
-			throw new IllegalStateException("Task context was null");
-		}
+	
 		
 		try {
 			logTask("Deleting stored passwords...");

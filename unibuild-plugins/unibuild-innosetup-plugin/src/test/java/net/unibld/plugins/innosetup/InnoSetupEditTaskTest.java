@@ -5,11 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import net.unibld.core.build.BuildConstants;
-import net.unibld.core.config.TaskConfig;
-import net.unibld.core.config.TaskContext;
-import net.unibld.core.test.UnitTestContext;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -20,6 +15,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import net.unibld.core.build.BuildConstants;
+import net.unibld.core.config.TaskContext;
+import net.unibld.core.test.UnitTestContext;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/innosetup-test-context.xml"})
 @Ignore
@@ -30,10 +29,8 @@ public class InnoSetupEditTaskTest {
 	
 	private void execute(File dir,boolean logging) {
 		InnoSetupEditTask t=new InnoSetupEditTask();
-		t.setTaskConfig(new TaskConfig());
-		t.getTaskConfig().setTaskType("innosetup-edit");
-		t.getTaskConfig().setTaskContext(new TaskContext());
-		t.getTaskConfig().getTaskContext().addAttribute(BuildConstants.VARIABLE_NAME_BUILD_DIR, dir.getAbsolutePath());
+		t.setContext(new TaskContext());
+		t.getContext().addAttribute(BuildConstants.VARIABLE_NAME_BUILD_DIR, dir.getAbsolutePath());
 		t.setIssPath(FilenameUtils.concat(dir.getAbsolutePath(),"test.iss"));
 		t.setPomFile(FilenameUtils.concat(dir.getAbsolutePath(),"pom.xml"));
 		t.setBuildNumberProperties(FilenameUtils.concat(dir.getAbsolutePath(),"buildNumber.properties"));

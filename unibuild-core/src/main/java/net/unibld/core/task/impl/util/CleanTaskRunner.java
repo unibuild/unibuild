@@ -25,14 +25,8 @@ public final class CleanTaskRunner extends AbstractCleanTaskRunner<CleanTask> {
 		if (task==null) {
 			throw new IllegalStateException("Task was null");
 		}
-		if (task.getTaskConfig()==null) {
-			throw new IllegalStateException("Task config was null");
-		}
-		if (task.getTaskConfig().getTaskContext()==null) {
-			throw new IllegalStateException("Task context was null");
-		}
 		
-		List<String> paths=new ArrayList<String>();
+		List<String> paths=new ArrayList<>();
 		if (task.isComplete()) {
 			String buildPath = this.getBuildContextAttribute(task,BuildConstants.VARIABLE_NAME_BUILD_DIR);
 			if (buildPath==null) {
@@ -59,7 +53,7 @@ public final class CleanTaskRunner extends AbstractCleanTaskRunner<CleanTask> {
 			
 		}
 		
-		if (paths.size()==0) {
+		if (paths.isEmpty()) {
 			throw new IllegalArgumentException("No paths have been specified");
 		}
 		

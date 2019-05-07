@@ -11,10 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import net.unibld.core.build.BuildConstants;
-import net.unibld.core.config.TaskConfig;
 import net.unibld.core.config.TaskContext;
-import net.unibld.plugins.msbuild.MsBuildTask;
-import net.unibld.plugins.msbuild.MsBuildTaskRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/msbuild-test-context.xml"})
@@ -41,10 +38,8 @@ public class MsBuildTaskRunnerWinTest {
 		t.setFrameworkDir(frameworkDir.getAbsolutePath());
 		t.setParameters(parameters);
 		
-		t.setTaskConfig(new TaskConfig());
-		t.getTaskConfig().setTaskType("msbuild");
-		t.getTaskConfig().setTaskContext(new TaskContext());
-		t.getTaskConfig().getTaskContext().addAttribute(BuildConstants.VARIABLE_NAME_BUILD_DIR, "./target");
+		t.setContext(new TaskContext());
+		t.getContext().addAttribute(BuildConstants.VARIABLE_NAME_BUILD_DIR, "./target");
 		
 		runner.run(t);
 	}
