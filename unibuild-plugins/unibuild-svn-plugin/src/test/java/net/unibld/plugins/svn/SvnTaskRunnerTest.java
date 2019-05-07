@@ -18,7 +18,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import net.unibld.core.build.BuildConstants;
 import net.unibld.core.config.BuildGoalsConfig;
 import net.unibld.core.config.ProjectConfig;
-import net.unibld.core.config.TaskConfig;
 import net.unibld.core.config.TaskContext;
 import net.unibld.core.scm.RealmHelper;
 import net.unibld.core.security.PasswordStrategy;
@@ -55,13 +54,11 @@ public class SvnTaskRunnerTest {
 		t.setRepositoryUrl(SVN_REPO_URL);
 		t.setUseBuiltinStore(String.valueOf(useBuiltInStore));
 		t.setUserName(SVN_USER);
-		t.setTaskConfig(new TaskConfig());
-		t.getTaskConfig().setTaskContext(new TaskContext());
+		t.setContext(new TaskContext());
 		ProjectConfig pc = new ProjectConfig();
 		pc.setGoalsConfig(new BuildGoalsConfig());
-		//pc.getGoalsConfig().getBuildConfig().setBuildContext(new BuildContext());
-		t.getTaskConfig().getTaskContext().addSerializableAttribute(BuildConstants.VARIABLE_NAME_PROJECT_CONFIG, pc);
-		t.getTaskConfig().getTaskContext().addAttribute(BuildConstants.VARIABLE_NAME_BUILD_DIR, folder);
+		t.getContext().setProjectConfig(pc);
+		t.getContext().addAttribute(BuildConstants.VARIABLE_NAME_BUILD_DIR, folder);
 		
 		SvnTaskRunner r=new SvnTaskRunner();
 		r.setBuiltInStorePath(FilenameUtils.concat(folder, ".subversion"+File.separator+"svn-simple"));

@@ -31,7 +31,7 @@ public class SvnTaskRunner extends AbstractExecTaskRunner<SvnTask> {
 	
 	@Override
 	protected String getArguments(SvnTask task) {
-		SvnCommand command=(SvnCommand) task.getTaskConfig().getTaskContext().getSerializable("svn.command");
+		SvnCommand command=(SvnCommand) task.getContext().getSerializable("svn.command");
 		if (command==null) {
 			throw new IllegalStateException("SVN command not found");
 		}
@@ -113,7 +113,7 @@ public class SvnTaskRunner extends AbstractExecTaskRunner<SvnTask> {
 		svnCommand.prepare(container,task);
 		
 		svnCommand.setCredential(svnSupport.getPasswordForTask(container,task));
-		task.getTaskConfig().getTaskContext().addSerializableAttribute("svn.command", svnCommand);
+		task.getContext().addSerializableAttribute("svn.command", svnCommand);
 		
 		ExecutionResult ret = svnSupport.execute(svnCommand);
 		
