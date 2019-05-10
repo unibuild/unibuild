@@ -1,0 +1,211 @@
+<ui:composition xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:hs="http://www.hideoutsoftware.com/facelets"
+	template="/WEB-INF/jsf/template.xhtml">
+
+	<ui:define name="content">
+		<style>
+		.noborder30 {
+			border-style: none !important;
+			width: 30%;
+		}
+		
+		.noborder70 {
+			border-style: none !important;
+			width: 70%;
+		}
+		
+		.label {
+			min-width: 100px;
+		}
+		</style>
+		<h1 class="ui-widget" style="font-size: 1.2em;">Build results</h1>
+		<h:form id="resultsFrm">
+
+			<p:dataTable var="result" value="#{buildResultsBean.taskResults}"
+				paginator="false" id="results" 
+				widgetVar="buildTable" reflow="true">
+
+				<p:column headerText="Index">
+					<h:outputText value="#{result.taskIdx}" />
+				</p:column>
+				
+				<p:column headerText="Task">
+					<h:outputText value="#{result.taskName}" />
+				</p:column>
+				<p:column headerText="Task class">
+					<h:outputText value="#{result.taskClass}" />
+				</p:column>
+
+				<p:column headerText="Completed">
+					<h:outputText value="#{build.completeDate}">
+						<f:convertDateTime type="both" pattern="yyyy.MM.dd HH:mm:ss" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="Success?">
+					<h:panelGrid columns="2" rendered="#{result.successful}"
+						columnClasses="noborder30,noborder70">
+						<h:graphicImage url="images/accept.png" />
+						<h:outputText value="OK" />
+					</h:panelGrid>
+
+					<h:panelGrid columns="2"
+						rendered="#{not result.successful and result.completeDate==null and buildProgressBean.isBuildRunning(result.build)}"
+						columnClasses="noborder30,noborder70">
+						<h:graphicImage url="images/hourglass.png" />
+						<h:outputText value="Running..." />
+					</h:panelGrid>
+					
+					<h:panelGrid columns="2"
+						rendered="#{not result.successful and result.completeDate!=null}"
+						columnClasses="noborder30,noborder70">
+						<h:graphicImage url="images/cancel.png" />
+						<h:outputText value="Failed" />
+					</h:panelGrid>
+				</p:column>
+
+				<p:column headerText="Error">
+					<h:outputText value="#{result.errorMessage}" />
+				</p:column>
+				
+				<p:column headerText="Stack trace">
+					<h:outputText value="#{buildResultsBean.getLimitedString(result.errorStackTrace)}" />
+				</p:column>
+
+			</p:dataTable>
+
+			<h1 class="ui-widget" style="font-size: 1.2em;">Test results</h1>
+			<p:dataTable var="suite" value="#{buildResultsBean.testSuites}"
+				paginator="false" id="suites" 
+				widgetVar="buildTable" reflow="true"
+				tableStyle="table-layout: auto;" rowStatePreserved="true">
+				
+				<p:column style="width:16px">
+		            <p:rowToggler />
+		        </p:column>
+				<p:column headerText="Task">
+					<h:outputText value="#{suite.taskIdx}" />
+				</p:column>
+				<p:column>
+					<h:graphicImage url="images/accept.png" rendered="#{suite.numberOfErrors==0 and suite.numberOfFailures==0}"/>
+					<h:graphicImage url="images/cancel.png" rendered="#{suite.numberOfErrors gt 0 or suite.numberOfFailures gt 0}"/>
+				</p:column>
+				<p:column headerText="Package">
+					<h:outputText value="#{suite.packageName}" />
+				</p:column>
+				<p:column headerText="Name">
+					<h:outputText value="#{suite.name}" />
+				</p:column>
+				<p:column headerText="Tests">
+					<h:outputText value="#{suite.numberOfTests}" />
+				</p:column>
+				<p:column headerText="Errors">
+					<h:outputText value="#{suite.numberOfErrors}" />
+				</p:column>
+				<p:column headerText="Failures">
+					<h:outputText value="#{suite.numberOfFailures}" />
+				</p:column>
+				<p:column headerText="Flakes">
+					<h:outputText value="#{suite.numberOfFlakes}" />
+				</p:column>
+				
+				<p:column headerText="Skipped">
+					<h:outputText value="#{suite.numberOfSkipped}" />
+				</p:column>
+				
+				<p:column headerText="Time">
+					<h:outputText value="#{suite.timeElapsed}" />
+				</p:column>
+				
+				 <p:rowExpansion>
+				 	<p:dataTable var="test" value="#{buildResultsBean.getTestResults(suite)}"
+						paginator="false" id="tests" 
+						widgetVar="buildTestTable" reflow="true"
+						tableStyle="table-layout: auto;"
+						rowIndexVar="rowIndex"
+						styleClass="myTable">
+						<p:column>
+							<h:graphicImage url="images/accept.png" rendered="#{test.failureType==null}"/>
+							<h:graphicImage url="images/skip.png" rendered="#{test.failureType!=null and test.failureType=='skipped'}"/>
+							<h:graphicImage url="images/cancel.png" rendered="#{test.failureType!=null and test.failureType!='skipped'}"/>
+						</p:column>
+						<p:column headerText="Class">
+							<h:outputText value="#{test.fullClassName}" />
+						</p:column>
+						<p:column headerText="Method">
+							<h:outputText value="#{test.name}" />
+						</p:column>
+						<p:column headerText="Failure type">
+							<h:outputText value="#{test.failureType}" />
+						</p:column>
+						<p:column headerText="Failure message">
+							<h:outputText value="#{test.failureMessage}"/>
+						</p:column>
+						<p:column headerText="Line">
+							<h:outputText value="#{test.failureErrorLine}" />
+						</p:column>
+						
+						<p:column headerText="Time">
+							<h:outputText value="#{test.time}" />
+						</p:column>
+						
+						<p:column style="text-align: center;">
+							<p:commandButton oncomplete="PF('resultViewDialog').show()"
+								icon="ui-icon-search" update="resultViewDialogForm">
+								<f:setPropertyActionListener target="#{buildResultsBean.selectedTestResult}"
+									value="#{test}" />
+							</p:commandButton>
+
+						</p:column>
+					</p:dataTable>
+				 </p:rowExpansion>
+				
+			</p:dataTable>
+		</h:form>
+
+		<h:form id="resultViewDialogForm">
+			<p:dialog header="Test result" widgetVar="resultViewDialog"
+				modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="1000">
+				<p:outputPanel id="resultDetail" style="margin-bottom: 20px;">
+					<p:panelGrid columns="2" columnClasses="label,value" rendered="#{buildResultsBean.selectedTestResult!=null}">
+						
+						<h:outputText value="Class" />
+						<h:outputText
+							value="#{buildResultsBean.selectedTestResult.fullClassName}" />
+							
+						<h:outputText value="Method" />
+						<h:outputText
+							value="#{buildResultsBean.selectedTestResult.name}" />
+
+						<h:outputText value="Failure type" />
+						<h:outputText
+							value="#{buildResultsBean.selectedTestResult.failureType}" />
+							
+						<h:outputText value="Failure message" />
+						<h:outputText
+							value="#{buildResultsBean.selectedTestResult.failureMessage}" />
+						
+
+						<h:outputText value="Failure line" />
+						<h:outputText
+							value="#{buildResultsBean.selectedTestResult.failureErrorLine}" />
+							
+						
+						<h:outputText value="Failure details" />
+						<h:outputText
+							value="#{buildResultsBean.selectedTestResult.failureDetail}" />
+						
+
+					</p:panelGrid>
+
+
+				</p:outputPanel>
+			</p:dialog>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

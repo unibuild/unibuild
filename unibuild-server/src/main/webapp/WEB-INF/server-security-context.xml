@@ -30,6 +30,7 @@
 		<security:intercept-url pattern="/builds.xhtml" access="hasAnyRole('ROLE_USER','ROLE_ADMIN','ROLE_SUPER_USER')"/>
 		<security:intercept-url pattern="/console.xhtml" access="hasAnyRole('ROLE_USER','ROLE_ADMIN','ROLE_SUPER_USER')"/>
 		<security:intercept-url pattern="/system.xhtml" access="hasAnyRole('ROLE_USER','ROLE_ADMIN','ROLE_SUPER_USER')"/>
+		<security:intercept-url pattern="/results.xhtml" access="hasAnyRole('ROLE_USER','ROLE_ADMIN','ROLE_SUPER_USER')"/>
 		
 		<security:intercept-url pattern="/invitations.xhtml" access="hasAnyRole('ROLE_ADMIN')"/>
 		<security:intercept-url pattern="/users.xhtml" access="hasAnyRole('ROLE_ADMIN')"/>

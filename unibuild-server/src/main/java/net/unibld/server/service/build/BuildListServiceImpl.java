@@ -38,13 +38,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class BuildListServiceImpl extends AbstractListQueryExecutor<Build> implements BuildListService {
 	
 	@Autowired
-	private BuildService buildPersistence;
+	private BuildService buildService;
 	
 	
 	
 	@Override
 	public Build findBuild(String id) {
-		return buildPersistence.findBuild(id);
+		return buildService.findBuild(id);
 	}
 	
 	@PersistenceContext

@@ -8,7 +8,9 @@ import net.unibld.core.BuildProject;
 import net.unibld.core.BuildTask;
 import net.unibld.core.config.ProjectConfig;
 import net.unibld.core.persistence.model.Build;
+import net.unibld.core.persistence.model.BuildTaskResult;
 import net.unibld.core.service.BuildService;
+import net.unibld.core.task.TaskRegistry;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,7 +31,7 @@ public class JpaBuildPersistenceTest {
 	private static final Logger LOG=org.slf4j.LoggerFactory.getLogger(JpaBuildPersistenceTest.class);
 	
 	@Autowired
-	private BuildService persistence;
+	private BuildService buildService;
 	
 	@Autowired
 	private ProjectLoader projectLoader;
@@ -37,6 +39,9 @@ public class JpaBuildPersistenceTest {
 	
 	@Autowired
 	private BuildToolContextHolder contextHolder;
+	
+	@Autowired
+	private TaskRegistry taskRegistry;
 	
 	
 	@Test
@@ -52,12 +57,12 @@ public class JpaBuildPersistenceTest {
 		
 		ProjectConfig pcfg = projectLoader.loadProject(c,path,new String[0]);
 		p.setProjectConfig(pcfg);
-		Build b = persistence.startBuild(id,p, path, "build", "unibld");
+		Build b = buildService.startBuild(id,p, path, "build", "unibld");
 		Assert.assertNotNull(b);
 		
-		persistence.buildCompleted(id);
+		buildService.buildCompleted(id);
 		
-		b=persistence.findBuild(id);
+		b=buildService.findBuild(id);
 		Assert.assertNotNull(b);
 		Assert.assertNotNull(b.getId());
 		Assert.assertEquals(id,b.getId());
@@ -78,14 +83,23 @@ public class JpaBuildPersistenceTest {
 		ProjectConfig pcfg = projectLoader.loadProject(c,path,new String[0]);
 		
 		p.setProjectConfig(pcfg);
-		Build b = persistence.startBuild(id, p, path, "build", "unibld");
+		Build b = buildService.startBuild(id, p, path, "build", "unibld");
 		Assert.assertNotNull(b);
+		
 		
 		BuildTask firstTask = pcfg.getGoalsConfig().getGoals().get(0).getTasks().getTasks().get(0);
 		Assert.assertNotNull(firstTask);
-		persistence.buildFailed(id,firstTask.getClass().getName(),0,new BuildException("Test error"),null);
 		
-		b=persistence.findBuild(id);
+		String taskName = taskRegistry.getTaskNameByClass(firstTask.getClass());
+		Assert.assertNotNull(taskName);
+		
+		
+		BuildTaskResult taskResult = buildService.taskStarted(id, firstTask.getClass().getName(), taskName, 0);
+		Assert.assertNotNull(taskResult);
+		
+		buildService.buildFailed(id,taskResult.getId(), firstTask.getClass().getName(),0,new BuildException("Test error"),null);
+		
+		b=buildService.findBuild(id);
 		Assert.assertNotNull(b);
 		Assert.assertNotNull(b.getId());
 		Assert.assertEquals(id,b.getId());

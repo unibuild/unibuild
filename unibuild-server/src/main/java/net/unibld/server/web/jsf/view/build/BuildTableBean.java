@@ -71,7 +71,24 @@ public class BuildTableBean extends AbstractModelLazyTableBean<Build> {
 			return null;
 		}
 		LOG.info("Showing log of build {} at: {}...",selectedItem.getId(),selectedItem.getLogFilePath());
-		return "/showlog?faces-redirect=true&log="+new String(Base64.encodeBase64URLSafe(selectedItem.getLogFilePath().getBytes("UTF-8")),"UTF-8");
+		return "/showlog?faces-redirect=true&log="+urlEncode(selectedItem.getLogFilePath());
+	}
+
+
+
+
+
+
+	public String urlEncode(String str) throws UnsupportedEncodingException {
+		return new String(Base64.encodeBase64URLSafe(str.getBytes("UTF-8")),"UTF-8");
+	}
+	public String showResults() {
+		if (selectedItem==null) {
+			return null;
+		}
+		
+		LOG.info("Showing log of build {} at: {}...",selectedItem.getId(),selectedItem.getLogFilePath());
+		return "/results?faces-redirect=true&id="+selectedItem.getId();
 	}
 
 

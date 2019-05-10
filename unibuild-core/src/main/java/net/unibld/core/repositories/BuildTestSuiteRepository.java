@@ -1,7 +1,10 @@
 package net.unibld.core.repositories;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 
+import net.unibld.core.persistence.model.Build;
 import net.unibld.core.persistence.model.BuildTestSuite;
 
 /**
@@ -10,5 +13,7 @@ import net.unibld.core.persistence.model.BuildTestSuite;
  *
  */
 public interface BuildTestSuiteRepository extends CrudRepository<BuildTestSuite, String>{
+
+	List<BuildTestSuite> findByBuildOrderByCreateDateAsc(Build build);
 	
 }

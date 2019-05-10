@@ -1,7 +1,10 @@
 package net.unibld.core.service;
 
+import java.util.List;
+
 import net.unibld.core.BuildProject;
 import net.unibld.core.persistence.model.Build;
+import net.unibld.core.persistence.model.BuildTaskResult;
 
 /**
  * {@link Build} persistence interface
@@ -31,7 +34,7 @@ public interface BuildService {
 	 * @param t Error thrown
 	 * @param logFilePath Log file path
 	 */
-	public void buildFailed(String buildId,String taskClass,int taskIdx,Throwable t,String logFilePath);
+	public void buildFailed(String buildId,String taskResultId,String taskClass,int taskIdx,Throwable t,String logFilePath);
 	/**
 	 * Finds a {@link Build} record by its string id
 	 * @param id Build record id
@@ -48,4 +51,7 @@ public interface BuildService {
 	 */
 	public void cancelBuild(String buildId);
 	public boolean isBuildCancelled(String id);
+	public BuildTaskResult taskStarted(String buildId, String className, String taskName, int taskIdx);
+	public BuildTaskResult taskCompleted(String taskResultId);
+	public List<BuildTaskResult> getBuildTaskResults(Build build);
 }

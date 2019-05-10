@@ -1,6 +1,7 @@
 package net.unibld.core.build;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import net.unibld.core.config.Variables;
 import net.unibld.core.log.LoggerHelper;
 import net.unibld.core.log.LoggingScheme;
 import net.unibld.core.persistence.model.Build;
+import net.unibld.core.persistence.model.BuildTaskResult;
 import net.unibld.core.service.BuildService;
 import net.unibld.core.task.BaseTaskRunner;
 import net.unibld.core.task.ITaskRunner;
@@ -41,7 +43,7 @@ public class ProjectBuilder {
 	
 
 	@Autowired
-	private BuildService persistence;
+	private BuildService buildService;
 	
 	
 	@Autowired
@@ -107,7 +109,7 @@ public class ProjectBuilder {
 		LOG.info("Validation of {} tasks succeeded",tasks.size());
 		
 		
-		Build b = persistence.startBuild(req.getBuildId(),req.getProject(), new File(context.getProjectFile()).getAbsolutePath(), req.getGoal(), req.getUserId());
+		Build b = buildService.startBuild(req.getBuildId(),req.getProject(), new File(context.getProjectFile()).getAbsolutePath(), req.getGoal(), req.getUserId());
 		List<BuildEventListener> listenerList=req.getBuildEventListeners();
 		if (listenerList!=null) {
 			for (BuildEventListener l:listenerList) {
@@ -119,17 +121,19 @@ public class ProjectBuilder {
 		
 		LOG.info("Started executing {} tasks...",tasks.size());
 		
-		
+		BuildTaskResult currentTaskResult=null;
 		
 		for (int i=1;i<=runners.size();i++) {
 			
 			BuildTask t = tasks.get(i-1);
 			BaseTaskRunner<? extends BuildTask> runner = (BaseTaskRunner<? extends BuildTask>) runners.get(i-1);
-			
+			String taskName = taskRegistry.getTaskNameByClass(t.getClass());
 			try {
-				if (persistence.isBuildCancelled(b.getId())) {
+				if (buildService.isBuildCancelled(b.getId())) {
 					throw new BuildException("Build cancelled by user.");
 				}
+				currentTaskResult=buildService.taskStarted(req.getBuildId(), t.getClass().getName(), taskName, i);
+				
 				executeTask(context,req.getProject(),req.getGoal(),i,t,runner);
 				loggingScheme.logTaskResult(t.getClass().getName(), TaskResult.OK);
 				
@@ -140,55 +144,23 @@ public class ProjectBuilder {
 						l.progress(req.getBuildId(),perc,i);
 					}
 				}
+				
+				buildService.taskCompleted(currentTaskResult.getId());
+				
+			} catch (BuildException bex) {
+				handleException(req, t, i, currentTaskResult, bex);
+				throw bex;
 			} catch (Exception ex ) {
-				String klazzName = t.getClass().getSimpleName();
-				loggingScheme.logTaskResult(klazzName, TaskResult.FAILED);
-				loggingScheme.logTaskFailureReason(klazzName, getFailureReason(t,ex));
-				
-				String logFilePath=null;
-				if (ex instanceof BuildException) {
-					BuildException be=(BuildException) ex;
-					if (be.getLogFilePath()!=null) {
-						File lf=new File(be.getLogFilePath());
-						if (lf.exists()&&lf.isFile()&&lf.length()>0) {
-							loggingScheme.logTaskErrorLogPath(klazzName, be.getLogFilePath());
-							logFilePath=be.getLogFilePath();
-							
-							if (listenerList!=null) {
-								for (BuildEventListener l:listenerList) {
-									l.errorLogCreated(req.getBuildId(),klazzName,be.getLogFilePath());
-								}
-							}
-						}
-					}
-				
-
-					
-				}
-
-			
-				if (persistence!=null) {
-					persistence.buildFailed(req.getBuildId(), klazzName,i, ex,logFilePath);
-					
-					if (listenerList!=null) {
-						for (BuildEventListener l:listenerList) {
-							l.buildFailed(req.getBuildId(),klazzName,i,ex);
-						}
-					}
-				}
-				if (ex instanceof BuildException) {
-					throw ((BuildException)ex);
-				}
-				throw new BuildException("Failed to execute "+klazzName, ex);
+				handleException(req, t, i, currentTaskResult, ex);
+				throw new BuildException("Failed to execute "+t.getClass().getSimpleName(), ex);
 			}
 		}
 		
 		
 		
 		LOG.info("Completed executing {} tasks...",tasks.size());
-		if (persistence!=null) {
-			persistence.buildCompleted(req.getBuildId());
-		}
+		buildService.buildCompleted(req.getBuildId());
+		
 		if (listenerList!=null) {
 			for (BuildEventListener l:listenerList) {
 				l.buildCompleted(req.getBuildId());
@@ -200,6 +172,44 @@ public class ProjectBuilder {
 				l.progress(req.getBuildId(),100,runners.size());
 			}
 		}
+	}
+
+	private String handleException(BuildRequest req, BuildTask t, int i,BuildTaskResult currentTaskResult, Exception ex) {
+		String klazzName = t.getClass().getSimpleName();
+		loggingScheme.logTaskResult(klazzName, TaskResult.FAILED);
+		loggingScheme.logTaskFailureReason(klazzName, getFailureReason(t,ex));
+		
+		String logFilePath=null;
+		if (ex instanceof BuildException) {
+			BuildException be=(BuildException) ex;
+			if (be.getLogFilePath()!=null) {
+				File lf=new File(be.getLogFilePath());
+				if (lf.exists()&&lf.isFile()&&lf.length()>0) {
+					loggingScheme.logTaskErrorLogPath(klazzName, be.getLogFilePath());
+					logFilePath=be.getLogFilePath();
+					
+					if (req.getBuildEventListeners()!=null) {
+						for (BuildEventListener l:req.getBuildEventListeners()) {
+							l.errorLogCreated(req.getBuildId(),klazzName,be.getLogFilePath());
+						}
+					}
+				}
+			}
+		
+
+			
+		}
+
+
+		buildService.buildFailed(req.getBuildId(), currentTaskResult!=null?currentTaskResult.getId():null, klazzName,i, ex,logFilePath);
+		
+		if (req.getBuildEventListeners()!=null) {
+			for (BuildEventListener l:req.getBuildEventListeners()) {
+				l.buildFailed(req.getBuildId(),klazzName,i,ex);
+			}
+		}
+	
+		return klazzName;
 	}
 
 	private void validateVars(Variables vars) {
@@ -335,18 +345,18 @@ public class ProjectBuilder {
 				taskCtx.addAttribute(key, context.getVariables().get(key));
 			}
 		}
-		BuildGoalConfig goalCfg=null;
 		if (project.getProjectConfig().getGoalsConfig()!=null) {
+			BuildGoalConfig goalCfg=null;
+			
 			if (goal!=null && project.getProjectConfig().getGoalsConfig().getGoals()!=null) {
 				for (BuildGoalConfig cfg:project.getProjectConfig().getGoalsConfig().getGoals()) {
 					if (cfg.getName().equals(goal)) {
 						goalCfg=cfg;
 					}
 				}
-			
 			}
 			if (goalCfg!=null) {
-				taskCtx.setGoalConfig(goalCfg);;
+				taskCtx.setGoalConfig(goalCfg);
 			}
 				
 		}
@@ -390,7 +400,7 @@ public class ProjectBuilder {
 	 */
 	public void cancelBuild(String buildId) {
 		LOG.info("Requesting build cancellation: {}",buildId);
-		persistence.cancelBuild(buildId);
+		buildService.cancelBuild(buildId);
 	}
 
 	

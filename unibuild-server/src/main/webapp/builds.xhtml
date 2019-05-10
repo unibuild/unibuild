@@ -94,36 +94,35 @@
 				        </p:column>
 				        
 				         <p:column headerText="Log" style="text-align: center">  
-				         	<p:commandButton action="#{buildTableBean.showLog}" value="Show log" icon="ui-icon-print"
-				         			rendered="#{build.logFilePath!=null}">
-							    <f:setPropertyActionListener target="#{buildTableBean.selectedItem}"
-									value="#{build}"/>
-							</p:commandButton>
-				            
+				            <p:link value="Show log" 
+								outcome="showlog.xhtml" style="font-weight:bold;">
+								<f:param name="log" value="#{buildTableBean.urlEncode(build.logFilePath)}" />
+							</p:link>
+					            
 				        </p:column>
 				  		
-				  		
+				  	    <p:column headerText="Results" style="text-align: center">  
+				         	<p:link value="Results" 
+								outcome="results.xhtml" style="font-weight:bold;" rendered="#{build.completeDate!=null}">
+								<f:param name="id" value="#{build.id}" />
+							</p:link>
+					            
+				        </p:column>
 					    <p:column headerText="Re-run" style="text-align: center">
 				             <p:commandButton action="#{projectRunnerBean.rerunBuild}" 
-				             		update="mainForm,container"
+				             		update="mainForm,container,builds"
 									value="Restart" 
 									oncomplete="progressStart();"
 									onclick="if (!validate('#{build.goal}','#{build.project.name}',#{buildTableBean.isGoalConfirmed(build)})) { return false; }"
 									rendered="#{build.completeDate!=null}">
 				        		<f:setPropertyActionListener target="#{buildTableBean.selectedItem}"
 									value="#{build}" />
-								<!-- <p:confirm header="Restart #{build.goal}" message="Do you want to restart the following goal: #{build.goal} (#{build.project.name})?" icon="ui-icon-alert"
-									disabled="#{not buildTableBean.isGoalConfirmed(build)}" />-->
 							</p:commandButton>
 				        </p:column>	   
 				    </p:dataTable>  
 		      </h:panelGrid>
 		      
-		      <p:confirmDialog widgetVar="buildConfirmDialog" global="true" showEffect="fade" hideEffect="fade">
-			        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-			        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-			  </p:confirmDialog>
-			  
+		   
 			  <script type="text/javascript">
 			  		function validate(goal,project,confirmed) {
 			  			if (!confirmed) {
@@ -138,24 +137,7 @@
 			  </script>
 		  </h:form>
 	            
-	      <p:dialog header="Build details" widgetVar="buildDialog" resizable="true">  
-	  
-	        <h:panelGrid id="buildDisplay" columns="2" cellpadding="4">  
-	  
-	            <f:facet name="header">  
-	                <h:outputText value="#{buildTableBean.selectedItem.project.name}" style="font-weight:bold"/> 
-	            </f:facet>  
-	  
-	  			<h:outputText value="Goal:" />  
-	            <h:outputText value="#{buildTableBean.selectedItem.goal}" style="font-weight:bold"/>  
-	  
-	            <h:outputText value="User:" />  
-	            <h:outputText value="#{buildTableBean.selectedItem.creatorUser}" style="font-weight:bold"/>  
-	  
-	              
-	        </h:panelGrid>  
-	    </p:dialog>    
-
+	     
 		<ui:include src="dialogs/passwordReader.xhtml" />
 	</ui:define>
 </ui:composition>

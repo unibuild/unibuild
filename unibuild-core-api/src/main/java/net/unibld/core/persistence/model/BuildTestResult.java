@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
@@ -28,13 +29,14 @@ public class BuildTestResult {
 	@Column(nullable=false, length=255)
 	private String name;
 	
-	@Column(nullable=true, length=255)
+	@Column(nullable=true)
+	@Lob
 	private String failureDetail;
-	@Column(nullable=true, length=255)
+	@Column(nullable=true, length=100)
 	private String failureErrorLine;
 	@Column(nullable=true, length=255)
 	private String failureMessage;
-	@Column(nullable=true, length=100)
+	@Column(nullable=true, length=255)
 	private String failureType;
 
 	@Column(nullable=false)

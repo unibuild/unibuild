@@ -1,5 +1,6 @@
 package net.unibld.core.service;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
@@ -78,6 +79,7 @@ public class BuildTestServiceImpl implements BuildTestService {
 				if (ts.getResults()!=null) {
 					for (TestResult tr:ts.getResults()) {
 						BuildTestResult r=new BuildTestResult();
+						r.setId(UUID.randomUUID().toString());
 						r.setName(tr.getName());
 						r.setFullClassName(tr.getFullClassName());
 						r.setFailureDetail(tr.getFailureDetail());
@@ -91,6 +93,18 @@ public class BuildTestServiceImpl implements BuildTestService {
 				}
 			}
 		}
+	}
+
+
+	@Override
+	public List<BuildTestSuite> getTestSuites(Build build) {
+		return suiteRepo.findByBuildOrderByCreateDateAsc(build);
+	}
+
+
+	@Override
+	public List<BuildTestResult> getTestResults(BuildTestSuite suite) {
+		return resultRepo.findBySuiteOrderByCreateDateAsc(suite);
 	}
 
 }
