@@ -71,7 +71,9 @@ public class BuildResultsBean {
 		if (str==null) {
 			return null;
 		}
-		
+		if (str.length()<=255) {
+			return str;
+		}
 		return str.substring(0,255)+" [...]";
 	}
 

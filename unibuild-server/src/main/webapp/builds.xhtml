@@ -95,7 +95,8 @@
 				        
 				         <p:column headerText="Log" style="text-align: center">  
 				            <p:link value="Show log" 
-								outcome="showlog.xhtml" style="font-weight:bold;">
+								outcome="showlog.xhtml" style="font-weight:bold;"
+								rendered="#{build.logFilePath!=null}">
 								<f:param name="log" value="#{buildTableBean.urlEncode(build.logFilePath)}" />
 							</p:link>
 					            
