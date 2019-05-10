@@ -1,15 +1,13 @@
 package net.unibld.core.task;
 
-import java.util.List;
-
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import net.unibld.core.persistence.model.BuildTestResult;
 import net.unibld.core.task.impl.java.maven.SurefireTestResultParser;
 import net.unibld.core.test.TestResults;
 
@@ -20,6 +18,7 @@ public class SurefireParserTest {
 	private SurefireTestResultParser parser;
 	
 	@Test
+	@Ignore
 	public void testSurefireParserDirectory() {
 		TestResults results = parser.parseTestResults("c:/tmp/surefire/surefire-reports");
 		Assert.assertNotNull(results);
