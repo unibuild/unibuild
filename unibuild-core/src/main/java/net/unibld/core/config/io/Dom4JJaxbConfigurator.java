@@ -270,13 +270,13 @@ public abstract class Dom4JJaxbConfigurator<T> extends JaxbConfigurator<T>{
 		}
 		Method readMethod = propertyDescriptor.getReadMethod();
 		if (readMethod==null) {
-			LOG.info(ERR_READ_METHOD_NOT_FOUND,t.getClass().getSimpleName(),propertyDescriptor.getName());
+			LOG.debug(ERR_READ_METHOD_NOT_FOUND,t.getClass().getSimpleName(),propertyDescriptor.getName());
 			return null;
 		}
 		
 		Method writeMethod = propertyDescriptor.getWriteMethod();
 		if (writeMethod==null) {
-			LOG.info(ERR_WRITE_METHOD_NOT_FOUND,t.getClass().getSimpleName(),propertyDescriptor.getName());
+			LOG.debug(ERR_WRITE_METHOD_NOT_FOUND,t.getClass().getSimpleName(),propertyDescriptor.getName());
 			return null;
 		}
 		
