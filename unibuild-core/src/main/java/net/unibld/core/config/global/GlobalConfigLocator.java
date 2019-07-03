@@ -31,12 +31,7 @@ public class GlobalConfigLocator {
 		File cfg=new File(defaultConfigPath);
 		
 		if (!cfg.exists()||!cfg.isFile()) {
-			try {
-				GlobalConfigExtractor.extract(null);
-			} catch (Exception e) {
-				LOGGER.error("Failed to extract global config to: "+defaultConfigPath,e);
-				throw new IllegalStateException("Failed to extract global config to: "+defaultConfigPath,e);
-			}
+			GlobalConfigExtractor.extract(null);
 			
 		}
 		return defaultConfigPath;

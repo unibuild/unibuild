@@ -1,9 +1,8 @@
 package net.unibld.core.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
-
-import net.unibld.core.util.DataFolder;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -21,7 +20,7 @@ public class GlobalConfigExtractor {
 	private static final Logger LOG=LoggerFactory.getLogger(GlobalConfigExtractor.class);
 	
 	
-	private static void extractGlobalConfigClasspath(File f) throws Exception {
+	private static void extractGlobalConfigClasspath(File f) throws IOException {
 		String name=String.format("/config/global.%s.properties",PlatformHelper.isWindows()?"win":"linux");
 		
 		InputStream is = GlobalConfigExtractor.class.getResourceAsStream(name);
@@ -37,7 +36,7 @@ public class GlobalConfigExtractor {
 	 * @param dir Directory of the target directory of the global config or null for the default
 	 * @throws Exception If an error occurs loading global config
 	 */
-	public static void extract(String dir) throws Exception {
+	public static void extract(String dir) {
 		String path=dir!=null?FilenameUtils.concat(dir,"config.properties"):getDefaultConfigPath();
 		File f=new File(path);
 		if (!f.exists()) {
@@ -47,12 +46,10 @@ public class GlobalConfigExtractor {
 			try {
 				extractGlobalConfigClasspath(f);
 				LOG.info("Extracted global config to: {}",f.getAbsolutePath());
-			} catch (Exception e) {
+			} catch (IOException e) {
 				LOG.error("Failed to extract global config to: "+f.getAbsolutePath(),e);
 			}
-			if (!f.exists()) {
-				throw new IllegalStateException("Failed to extract global config to: "+f.getAbsolutePath());
-			}
+			
 		}
 		
 		
