@@ -82,16 +82,19 @@ public class PluginDetector {
 			long start=System.currentTimeMillis();
 			LOGGER.info("Scanning for plugins in: {}...",pluginDir);
 			File[] files=findJarFilesInPluginDir();
-			LOGGER.info("{} jar files found in: {}",files.length,pluginDir);
+			LOGGER.info("{} jar files found in: {}",files!=null ? files.length : 0,pluginDir);
 			
 			int i=0;
 			List<Plugin> plugins=new ArrayList<Plugin>();
-			for (File f:files) {
-				LOGGER.info("Processing {}...",f.getAbsolutePath());
-				Plugin plugin=processJarFile(f);
-				if (plugin!=null) {
-					i++;
-					plugins.add(plugin);
+			if (files!=null) {
+				
+				for (File f:files) {
+					LOGGER.info("Processing {}...",f.getAbsolutePath());
+					Plugin plugin=processJarFile(f);
+					if (plugin!=null) {
+						i++;
+						plugins.add(plugin);
+					}
 				}
 			}
 			
